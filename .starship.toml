@@ -1,0 +1,19 @@
+
+#right_format = '$time'
+continuation_prompt = '▶▶ '
+[kubernetes]
+disabled = false
+
+[aws]
+disabled = false
+
+[time]
+disabled = false
+format = '[\[ $time \]]($style) '
+time_format = '%T'
+utc_time_offset = 'local'
+#time_range = '10:00:00-14:00:00'
+
+[cmd_duration]
+min_time = 500
+format = 'underwent [$duration](bold yellow)'

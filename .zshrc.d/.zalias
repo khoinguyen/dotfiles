@@ -1,0 +1,106 @@
+alias kc=kubectl
+function kctx() {
+  kubectl config use-context $1
+}
+
+function kns() {
+  if [ -z $1 ];
+  then
+    kubectl get namespace
+  else
+    kubectl config set-context --current --namespace=$1
+  fi
+}
+function krr() {
+  kubectl rollout restart deployment $1
+}
+function kpods() {
+  kubectl get pods | grep $1
+}
+function kwp() {
+  kubectl get pod -w | grep $1
+}
+function kgp() {
+    if [ -z $1 ]; then
+      kubectl get pod
+    else 
+      kubectl get pod | grep $1
+    fi
+}
+function kgpw() {
+    if [ -z $1 ]; then
+      kubectl get pod -w
+    else 
+      kubectl get pod -w | grep $1
+    fi
+}
+
+function kdp() {
+
+  kubectl describe pod $1
+}
+function aws-iam-all-keys() {
+  for user in $(aws iam list-users --output text | awk '{print $NF}'); do
+    aws iam list-access-keys --user $user --output text
+    test $? -gt 128 && exit
+  done
+}
+function kdel() {
+  kubectl get pod | awk '{print $1}' | grep $1 | xargs -I {} kubectl delete pod {}
+} 
+function kall() {
+  kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl get --show-kind --ignore-not-found -n $1
+}
+
+ function sealit() {
+  if [ -n "$2" ];
+    then TO_CONTEXT="$2";
+    else TO_CONTEXT=$(kubectl config current-context);
+  fi
+  echo "Seal $1 with context $TO_CONTEXT"
+  cat $1 | kubeseal --controller-namespace sealed-secrets --controller-name sealed-secrets --format yaml --context $TO_CONTEXT  >! sealed-$1
+}
+function download_pcap() {
+   aws s3 cp s3://traffic-monitor-pcap/$1 .
+}
+alias gp="git push"
+alias gst="git status"
+#alias grd="git stash && git checkout develop && git pull && git checkout - && git rebase develop && git stash pop && git push --force-with-lease"
+function grd() {
+  git checkout develop
+  git pull
+  git checkout -
+  git rebase develop
+}
+function gpm() {
+  git push
+  PR_URL=$(gh pr create --fill)
+  gh pr merge
+  open -a Safari $PR_URL/files
+}
+function gpfm() {
+  git push --force-with-lease
+  PR_URL=$(gh pr create --fill)
+  gh pr merge
+  open -a Safari $PR_URL/files
+}
+function cbst() {
+  aws codebuild batch-get-builds --ids $(aws codebuild list-builds-for-project --project-name $1  | jq -r '.ids[0]') | jq '.builds[0]' | egrep '(sourceVersion|buildStatus|deepLink)'
+}
+alias code=code-insiders
+function aws_login() {
+  aws sso login --profile ampup-sso
+}
+function ecr_login() {
+	aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 889722817590.dkr.ecr.us-west-2.amazonaws.com
+}
+function release_tag() {
+  git tag -a $1 -m "chore: release $1"
+  git push --tags
+}
+function nosleep() {
+  sudo pmset -a disablesleep 1
+}
+function onsleep() {
+  sudo pmset -a disablesleep 0
+}
