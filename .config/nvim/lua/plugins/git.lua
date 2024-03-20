@@ -10,4 +10,7 @@ return {
       vim.keymap.set("n", "<leader>gl", ":Gitsigns toggle_current_line_blame<CR>", {})
     end
   },
+  {
+    "ThePrimeagen/git-worktree.nvim"
+  },
 }
