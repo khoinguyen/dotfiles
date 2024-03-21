@@ -30,3 +30,4 @@ for file in ${ZDOTDIR:-$HOME}/.zshrc.d/*.sh; do
     source "$file"
 done
 
+source $XDG_CONFIG_HOME/op/plugins.sh
