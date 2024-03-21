@@ -1,0 +1,2 @@
+export TMUXIFIER_LAYOUT_PATH="$XDG_CONFIG_HOME/tmux-layouts"
+
