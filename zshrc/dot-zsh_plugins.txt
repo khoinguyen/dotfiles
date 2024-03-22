@@ -1,0 +1,6 @@
+rupa/z
+zsh-users/zsh-syntax-highlighting
+zsh-users/zsh-completions
+zsh-users/zsh-history-substring-search
+joshskidmore/zsh-fzf-history-search
+zsh-users/zsh-autosuggestions
