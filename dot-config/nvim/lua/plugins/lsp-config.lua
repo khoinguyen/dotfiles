@@ -9,7 +9,7 @@ return {
     "williamboman/mason-lspconfig.nvim",
     config = function()
       require("mason-lspconfig").setup {
-        ensure_installed = { "lua_ls", "rust_analyzer", "tsserver" },
+        ensure_installed = { "lua_ls", "rust_analyzer", "tsserver", "pyright" },
       }
     end
   },
@@ -26,6 +26,9 @@ return {
         capabilities = capabilities
       })
 
+      lspconfig.pyright.setup({
+        capabilities = capabilities
+      })
       vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
       vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
       vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
