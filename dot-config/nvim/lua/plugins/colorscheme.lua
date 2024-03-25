@@ -29,7 +29,7 @@ return {
           gitsigns = true,
           treesitter = true,
           notify = false,
-          neotree = true,
+          neotree = false,
           harpoon = true,
           mini = {
             enabled = true,

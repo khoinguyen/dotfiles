@@ -1,8 +1,8 @@
 local function close_neotree()
-  vim.cmd(":Neotree close")
+  --  vim.cmd(":Neotree close")
 end
 local function reveal_neotree()
-  vim.cmd(":Neotree reveal")
+  --vim.cmd(":Neotree reveal")
 end
 return {
   'rmagatti/auto-session',
