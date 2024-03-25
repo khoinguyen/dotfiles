@@ -1,3 +1,12 @@
+local function organize_imports()
+  local params = {
+    command = "_typescript.organizeImports",
+    arguments = { vim.api.nvim_buf_get_name(0) },
+    title = ""
+  }
+  vim.lsp.buf.execute_command(params)
+end
+
 return {
   {
     "williamboman/mason.nvim",
@@ -23,7 +32,13 @@ return {
       })
 
       lspconfig.tsserver.setup({
-        capabilities = capabilities
+        capabilities = capabilities,
+        commands = {
+          OrganizeImports = {
+            organize_imports,
+            description = "Organize Imports"
+          }
+        }
       })
 
       lspconfig.pyright.setup({
