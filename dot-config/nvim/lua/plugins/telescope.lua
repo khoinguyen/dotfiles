@@ -8,7 +8,6 @@ return {
       {
         'nvim-telescope/telescope-fzf-native.nvim', build = 'make'
       },
-
     },
     config = function()
       local builtin = require("telescope.builtin")
@@ -32,7 +31,6 @@ return {
       }
       require("telescope").load_extension("ui-select")
       require('telescope').load_extension('fzf')
-
     end
   },
 }
