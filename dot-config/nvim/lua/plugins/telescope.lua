@@ -8,11 +8,14 @@ return {
       {
         'nvim-telescope/telescope-fzf-native.nvim', build = 'make'
       },
+      "RutaTang/quicknote.nvim",
+      "smartpde/telescope-recent-files"
     },
     config = function()
       local builtin = require("telescope.builtin")
       vim.keymap.set('n', '<C-p>', builtin.find_files, {})
       vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+      vim.keymap.set('n', '<leader>gb', [[<cmd>Telescope buffers<CR>]])
       require("telescope").setup {
         extensions = {
           fzf = {
@@ -26,11 +29,19 @@ return {
             require("telescope.themes").get_dropdown {
               -- even more opts
             }
+          },
+          quicknote = {
+            defaultScope = "CWD",
           }
         }
       }
       require("telescope").load_extension("ui-select")
+      require("telescope").load_extension("quicknote")
       require('telescope').load_extension('fzf')
+      require('telescope').load_extension('recent_files')
+      vim.api.nvim_set_keymap("n", "<Leader><Leader>",
+        [[<cmd>lua require('telescope').extensions.recent_files.pick()<CR>]],
+        { noremap = true, silent = true })
     end
   },
 }

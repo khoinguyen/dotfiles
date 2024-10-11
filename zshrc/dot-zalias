@@ -1,4 +1,6 @@
+alias lg=lazygit
 alias kc=kubectl
+
 function kctx() {
   kubectl config use-context $1
 }
@@ -52,6 +54,9 @@ function kall() {
   kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl get --show-kind --ignore-not-found -n $1
 }
 
+function krestart() {
+  kubectl --field-manager=flux-client-side-apply rollout restart deployment $1
+}
  function sealit() {
   if [ -n "$2" ];
     then TO_CONTEXT="$2";
@@ -65,6 +70,9 @@ function download_pcap() {
 }
 alias gp="git push"
 alias gst="git status"
+alias gco="git checkout"
+alias gcm="git commit -m"
+alias gbc="git checkout -b"
 #alias grd="git stash && git checkout develop && git pull && git checkout - && git rebase develop && git stash pop && git push --force-with-lease"
 function grd() {
   git checkout develop
@@ -76,7 +84,7 @@ function gpm() {
   git push
   PR_URL=$(gh pr create --fill)
   gh pr merge
-  open -a Safari $PR_URL/files
+  open -a "Zen Browser" $PR_URL/files
 }
 function gpfm() {
   git push --force-with-lease
@@ -87,7 +95,6 @@ function gpfm() {
 function cbst() {
   aws codebuild batch-get-builds --ids $(aws codebuild list-builds-for-project --project-name $1  | jq -r '.ids[0]') | jq '.builds[0]' | egrep '(sourceVersion|buildStatus|deepLink)'
 }
-alias code=code-insiders
 function aws_login() {
   aws sso login --profile ampup-sso
 }
