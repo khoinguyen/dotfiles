@@ -38,6 +38,7 @@
           pkgs.rbenv
           pkgs.stow
           pkgs.neovim
+          pkgs.starship
           pkgs.mkalias
           pkgs.k9s
           pkgs.cloudlens
@@ -163,8 +164,6 @@
 
             # Automatically migrate existing Homebrew installations
             autoMigrate = true;
-
-#            mutableTaps = false;
           };
         }
         home-manager.darwinModules.home-manager
