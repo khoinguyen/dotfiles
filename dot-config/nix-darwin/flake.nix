@@ -134,14 +134,19 @@
       # $ darwin-rebuild changelog
       system.stateVersion = 5;
 
-      # The platform the configuration will be used on.
-      nixpkgs.hostPlatform = "aarch64-darwin";
+      security.pam.enableSudoTouchIdAuth = true;
+      users.users.khoinguyen.home = "/Users/khoinguyen";
+      nix.configureBuildUsers = true;
+      nix.useDaemon = true;
+
+
     };
   in
   {
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#Khois-MacBook-Pro
     darwinConfigurations."Khois-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+      system = "aarch64-darwin";
       modules = [ 
         configuration 
         nix-homebrew.darwinModules.nix-homebrew

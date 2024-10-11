@@ -1,4 +1,7 @@
 { config, pkgs, ... }:
+let 
+  dotfiles_dir = ../..;
+in
 {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
@@ -17,4 +20,12 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+  home.file = {
+    ".config/alacritty".source = dotfiles_dir + /dot-config/alacritty;
+    ".config/starship.toml".source = dotfiles_dir + /dot-config/starship.toml;
+    ".zshrc".source = dotfiles_dir + /zshrc/.zshrc;
+    ".zalias".source = dotfiles_dir + /zshrc/.zalias;
+    ".zsh_plugins.txt".source = dotfiles_dir + /zshrc/.zsh_plugins.txt;
+    ".zshrc.d".source = dotfiles_dir + /zshrc/.zshrc.d;
+  };
 }
