@@ -3,10 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
     nix-darwin.url = "github:LnL7/nix-darwin";
-    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
 
 #    homebrew-core = {
 #      url = "github:homebrew/homebrew-core";
@@ -18,7 +22,7 @@
 #    };
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, home-manager }:
   let
     configuration = { pkgs, config, ... }: {
       # List packages installed in system profile. To search by name, run:
@@ -30,7 +34,8 @@
           # fonts
           pkgs.fira-code-nerdfont
 
-
+          pkgs.thefuck
+          pkgs.rbenv
           pkgs.stow
           pkgs.neovim
           pkgs.mkalias
@@ -76,9 +81,17 @@
           "postman"
           "mongodb-compass"
           "keepingyouawake"
+          "zoom"
+          "notion"
+          "visual-studio-code"
         ];
 
+        masApps = {
+          "Pine Player" = 1112075769;
+        };
         onActivation.cleanup = "zap";
+        onActivation.autoUpdate = true;
+        onActivation.upgrade = true;
       };
 
       fonts.packages = [
@@ -148,6 +161,14 @@
 
 #            mutableTaps = false;
           };
+        }
+        home-manager.darwinModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.khoinguyen = import ./home.nix;
+          # Optionally, use home-manager.extraSpecialArgs to pass
+          # arguments to home.nix
         }
       ];
     };
