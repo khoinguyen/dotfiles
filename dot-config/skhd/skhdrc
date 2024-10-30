@@ -1,1 +1,2 @@
 cmd + shift - A : open -a "Arc"
+cmd + shift - T : open -a "Alacritty"

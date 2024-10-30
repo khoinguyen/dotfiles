@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let 
   dotfiles_dir = ../..;
 in
@@ -108,6 +108,7 @@ in
   };
   home.file = {
     ".config/skhd".source = dotfiles_dir + /dot-config/skhd;
+    ".config/skhd".recursive = true;
 #    ".config/alacritty".source = dotfiles_dir + /dot-config/alacritty;
     #".config/starship.toml".source = dotfiles_dir + /dot-config/starship.toml;
    # ".zshrc".source = dotfiles_dir + /zshrc/.zshrc;
@@ -116,4 +117,11 @@ in
    # ".zshrc.d".source = dotfiles_dir + /zshrc/.zshrc.d;
     ".config/nvim".source = dotfiles_dir + /dot-config/nvim;
   };
+#  home.activation = {
+#    debugAction = lib.hm.dag.entryAfter ["setupLaunchAgents"] ''
+#      echo "After setupLaunchAgents"
+#    
+#    '';
+#
+#  };
 }
