@@ -1,6 +1,21 @@
 alias lg=lazygit
 alias kc=kubectl
+alias vim=nvim
+export EDITOR=nvim
+function now() {
+  delta=$1
+  if [[ -z $delta ]]; then
+    delta=-0S
+  fi
 
+  date -u -v$delta +"%Y-%m-%dT%H:%M:%SZ"
+}
+function kd() {
+  kubectl describe $@
+}
+function kg() {
+  kubectl get $@
+}
 function kctx() {
   kubectl config use-context $1
 }
@@ -14,7 +29,7 @@ function kns() {
   fi
 }
 function krr() {
-  kubectl rollout restart deployment $1
+  kubectl --field-manager=flux-client-side-apply rollout restart deployment $@
 }
 function kpods() {
   kubectl get pods | grep $1
@@ -38,8 +53,7 @@ function kgpw() {
 }
 
 function kdp() {
-
-  kubectl describe pod $1
+  kubectl describe pod $@
 }
 function aws-iam-all-keys() {
   for user in $(aws iam list-users --output text | awk '{print $NF}'); do
@@ -54,9 +68,6 @@ function kall() {
   kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl get --show-kind --ignore-not-found -n $1
 }
 
-function krestart() {
-  kubectl --field-manager=flux-client-side-apply rollout restart deployment $1
-}
  function sealit() {
   if [ -n "$2" ];
     then TO_CONTEXT="$2";
@@ -90,10 +101,7 @@ function gpfm() {
   git push --force-with-lease
   PR_URL=$(gh pr create --fill)
   gh pr merge
-  open -a Safari $PR_URL/files
-}
-function cbst() {
-  aws codebuild batch-get-builds --ids $(aws codebuild list-builds-for-project --project-name $1  | jq -r '.ids[0]') | jq '.builds[0]' | egrep '(sourceVersion|buildStatus|deepLink)'
+  open -a "Zen Browser" $PR_URL/files
 }
 function aws_login() {
   aws sso login --profile ampup-sso
@@ -111,3 +119,12 @@ function nosleep() {
 function onsleep() {
   sudo pmset -a disablesleep 0
 }
+
+alias nr="darwin-rebuild switch --flake ~/dotfiles/dot-config/nix-darwin"
+alias nv="vim ~/dotfiles/dot-config/nix-darwin/"
+
+
+# Wireguard alias
+alias wgu="sudo wg-quick up ~/wireguard.conf/default.conf"
+alias wgd="sudo wg-quick down ~/wireguard.conf/default.conf"
+alias wgs="sudo wg"

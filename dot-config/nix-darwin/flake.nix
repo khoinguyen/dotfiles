@@ -33,33 +33,41 @@
         [ 
           # fonts
           pkgs.fira-code-nerdfont
-
+          
+          # basic packages
           pkgs.thefuck
-          pkgs.rbenv
-          pkgs.stow
-          pkgs.neovim
+          pkgs.atuin
           pkgs.starship
           pkgs.mkalias
+          pkgs.neovim
+          pkgs.zoxide
+          pkgs.tree
+          pkgs.fd
+          pkgs.fzf
+          pkgs.skhd
+          # development
+          pkgs.asdf-vm
+          pkgs.rbenv
+          pkgs.jq
+          pkgs.yq
+          pkgs.gnupg
+          pkgs.lazygit
+          pkgs.gh
+          pkgs.dive
+          pkgs.git
+          pkgs.wireguard-tools
+
+          # cloud 
           pkgs.k9s
           pkgs.cloudlens
           pkgs.awscli2
           pkgs.istioctl
           pkgs.kubectl
+          pkgs.kubeseal
           pkgs.eksctl
-          pkgs.jq
-          pkgs.yq
-          pkgs.zoxide
-          pkgs.tree
-          pkgs.fd
-          pkgs.eza
-          pkgs.gnupg
-          pkgs.lazygit
-          pkgs.fzf
-          pkgs.gh
-          pkgs.dive
-          pkgs.git
+          pkgs.kustomize
           # GUI Apps
-          pkgs.alacritty
+          #pkgs.alacritty
           
         ];
       homebrew = {
@@ -72,6 +80,9 @@
           "mas"
           "zoxide"
           "fluxcd/tap/flux@2.2"
+          "logcli"
+        #  "wireguard-go"
+          "antidote"
         ];
         casks = [
           "hammerspoon"
@@ -170,6 +181,7 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
+          home-manager.backupFileExtension = "nixbk";
           home-manager.users.khoinguyen = import ./home.nix;
           # Optionally, use home-manager.extraSpecialArgs to pass
           # arguments to home.nix
