@@ -33,6 +33,7 @@
         [ 
           # fonts
           pkgs.fira-code-nerdfont
+          pkgs.sketchybar-app-font          
           
           # basic packages
           pkgs.thefuck
@@ -45,6 +46,8 @@
           pkgs.fd
           pkgs.fzf
           pkgs.skhd
+          pkgs.sketchybar
+
           # development
           pkgs.asdf-vm
           pkgs.rbenv
@@ -56,6 +59,8 @@
           pkgs.dive
           pkgs.git
           pkgs.wireguard-tools
+          pkgs.go
+          # python
 
           # cloud 
           pkgs.k9s
@@ -63,9 +68,13 @@
           pkgs.awscli2
           pkgs.istioctl
           pkgs.kubectl
+          pkgs.kubernetes-helm
           pkgs.kubeseal
           pkgs.eksctl
           pkgs.kustomize
+          pkgs.steampipe
+          pkgs.steampipePackages.steampipe-plugin-aws
+          
           # GUI Apps
           #pkgs.alacritty
           
@@ -81,13 +90,16 @@
           "zoxide"
           "fluxcd/tap/flux@2.2"
           "logcli"
+          "micromamba"
         #  "wireguard-go"
           "antidote"
+          "golang"
         ];
         casks = [
           "hammerspoon"
           "aerospace"
           "1password"
+#          "amethyst"
           "1password-cli"
           "slack"
           "postman"
@@ -96,6 +108,7 @@
           "zoom"
           "notion"
           "visual-studio-code"
+          "orbstack"
         ];
 
         masApps = {
@@ -142,7 +155,12 @@
       # Set Git commit hash for darwin-version.
       system.configurationRevision = self.rev or self.dirtyRev or null;
 
-      # Used for backwards compatibility, please read the changelog before changing.
+      # press and hold to repeat instead of shows alternative chars
+      # this help to boost navigation in vim
+      system.defaults.NSGlobalDomain.ApplePressAndHoldEnabled = false;
+      # click the scroller to mvoe to the position
+      system.defaults.NSGlobalDomain.AppleScrollerPagingBehavior = true;
+
       # $ darwin-rebuild changelog
       system.stateVersion = 5;
 

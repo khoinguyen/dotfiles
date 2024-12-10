@@ -1,12 +1,13 @@
 { config, pkgs, lib, ... }:
 let 
   dotfiles_dir = ../..;
+  homeDir = "/Users/khoinguyen";
 in
 {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = "khoinguyen";
-  home.homeDirectory = "/Users/khoinguyen";
+  home.homeDirectory = homeDir;
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
@@ -63,6 +64,25 @@ in
     autocd = true;
     initExtra = ''
       . "${pkgs.asdf-vm}/share/asdf-vm/asdf.sh"
+
+      # >>> mamba initialize >>>
+      # !! Contents within this block are managed by 'micromamba shell init' !!
+      export MAMBA_EXE='/opt/homebrew/bin/micromamba';
+      export MAMBA_ROOT_PREFIX="$HOME/.local/share/mamba";
+      __mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
+      if [ $? -eq 0 ]; then
+        eval "$__mamba_setup"
+      else
+        alias micromamba="$MAMBA_EXE"  # Fallback on help from micromamba activate
+      fi
+      unset __mamba_setup
+      # <<< mamba initialize <<<
+      
+      # Integration for .iterm2
+      test -e "${homeDir}/.iterm2_shell_integration.zsh" && source "${homeDir}/.iterm2_shell_integration.zsh"
+      for file in ${homeDir}/.zshrc.d/*.sh; do
+          source "$file"
+      done
     '';
   };
   programs.bat.enable = true;
@@ -106,22 +126,21 @@ in
     # Configuration written to ~/.config/starship.toml
     settings = pkgs.lib.importTOML (dotfiles_dir + /dot-config/starship.toml);
   };
+  home.sessionPath = [
+    "/opt/homebrew/bin"
+
+  ];
   home.file = {
-    ".config/skhd".source = dotfiles_dir + /dot-config/skhd;
-    ".config/skhd".recursive = true;
-#    ".config/alacritty".source = dotfiles_dir + /dot-config/alacritty;
-    #".config/starship.toml".source = dotfiles_dir + /dot-config/starship.toml;
-   # ".zshrc".source = dotfiles_dir + /zshrc/.zshrc;
-    ".zalias".source = dotfiles_dir + /zshrc/.zalias;
-   # ".zsh_plugins.txt".source = dotfiles_dir + /zshrc/.zsh_plugins.txt;
-   # ".zshrc.d".source = dotfiles_dir + /zshrc/.zshrc.d;
+    ".config/skhd/skhdrc".source = dotfiles_dir + /dot-config/skhd/skhdrc;
+    ".zalias".source = dotfiles_dir + /zshrc/dot-zalias;
+    ".zshrc.d".source = dotfiles_dir + /zshrc/dot-zshrc.d;
     ".config/nvim".source = dotfiles_dir + /dot-config/nvim;
   };
-#  home.activation = {
-#    debugAction = lib.hm.dag.entryAfter ["setupLaunchAgents"] ''
-#      echo "After setupLaunchAgents"
-#    
-#    '';
-#
-#  };
+  home.activation = {
+    debugAction = lib.hm.dag.entryAfter ["setupLaunchAgents"] ''
+      echo "After setupLaunchAgents"
+      run ${pkgs.skhd}/bin/skhd -r
+    '';
+
+  };
 }
