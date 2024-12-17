@@ -47,7 +47,7 @@
           pkgs.fzf
           pkgs.skhd
           pkgs.sketchybar
-
+          pkgs.yazi
           # development
           pkgs.asdf-vm
           pkgs.rbenv
