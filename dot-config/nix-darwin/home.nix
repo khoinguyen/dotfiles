@@ -17,13 +17,30 @@ in
   # You can update Home Manager without changing this value. See
   # the Home Manager release notes for a list of state version
   # changes in each release.
-  home.stateVersion = "24.05";
+  home.stateVersion = "24.11";
 
   # Let Home Manager install and manage itself.
 
   programs.home-manager.enable = true;
+  # Wezterm from nixpkgs not render text correctly
+  # programs.wezterm = {
+  #   enable = true;
+  #   extraConfig = ''
+  #     local wezterm = require 'wezterm'
+
+  #     return {
+  #       font = wezterm.font("MesloLGL Nerd Font Mono"),
+  #     }
+
+  #   '';
+  # };
+  programs.kitty = {
+    enable = false;
+    themeFile = "Catppuccin-Frappe";
+    font.name = "MesloLGL Nerd Font Mono";
+  };
   programs.alacritty = {
-    enable = true;
+    enable = false;
     settings = {
       font.normal = {
         family = "FiraCode Nerd Font";
@@ -56,11 +73,48 @@ in
 
     };
   };
+  programs.fish = {
+    enable = true;
+    shellAliases = {
+      "vim" = "nvim";
+      "nv"  = "vim ${homeDir}/dotfiles/dot-config/nix-darwin";
+      "nr"  = "darwin-rebuild switch --flake ~/dotfiles/dot-config/nix-darwin";
+    };
+    interactiveShellInit = ''
+      set -g fish_key_bindings fish_vi_key_bindings
+    '';
+    shellInitLast = ''
+      zoxide init fish | source
+    '';
+    plugins = [
+      { name = "done"; src = pkgs.fishPlugins.done; }
+      { name = "git-abbr"; 
+        src = pkgs.fetchFromGitHub {
+              owner = "lewisacidic";
+              repo = "fish-git-abbr";
+              rev = "9967009cf7b14459f5062d9d55e2840801746bb6";
+              sha256 = "sha256-wye76M1fkKEmEGJI9zXBIgLr7T8dBIgJudwTXWOIFjg=";
+        };
+      }
+      { name = "grc"; src = pkgs.fishPlugins.grc; }
+      { name = "async-prompt"; src = pkgs.fishPlugins.async-prompt; }
+    ];
+    shellAbbrs = {
+      "kg" = "kubectl get";
+      "kgoy" = {
+        setCursor = true;
+        expansion = "kubectl get % -o yaml";
+      };
+    };
+  };
   programs.zsh = {
     enable = true;
     enableCompletion = true;
     syntaxHighlighting.enable = true;
     envExtra = "source ~/.zalias";
+    shellAliases = {
+      "v" = "nvim";
+    };
     autocd = true;
     initExtra = ''
       . "${pkgs.asdf-vm}/share/asdf-vm/asdf.sh"
@@ -134,7 +188,13 @@ in
     ".config/skhd/skhdrc".source = dotfiles_dir + /dot-config/skhd/skhdrc;
     ".zalias".source = dotfiles_dir + /zshrc/dot-zalias;
     ".zshrc.d".source = dotfiles_dir + /zshrc/dot-zshrc.d;
-    ".config/nvim".source = dotfiles_dir + /dot-config/nvim;
+#    ".config/nvim".source = dotfiles_dir + /dot-config/nvim;
+    ".wezterm.lua".text = ''
+      local wezterm = require 'wezterm'
+      local config = wezterm.config_builder()
+      config.color_scheme = 'catppuccin-macchiato'
+      return config
+    '';
   };
   home.activation = {
     debugAction = lib.hm.dag.entryAfter ["setupLaunchAgents"] ''
