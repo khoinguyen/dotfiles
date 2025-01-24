@@ -128,4 +128,11 @@ alias nv="vim ~/dotfiles/dot-config/nix-darwin/"
 alias wgu="sudo wg-quick up ~/wireguard.conf/default.conf"
 alias wgd="sudo wg-quick down ~/wireguard.conf/default.conf"
 alias wgs="sudo wg"
-alias wgr="wgd && wgu"
+function wgr() {
+  wgs | grep interface
+  if [[ $? == 0 ]]; then
+    wgd
+  fi
+
+  wgu
+}

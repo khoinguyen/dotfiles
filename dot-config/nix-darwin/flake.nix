@@ -12,6 +12,11 @@
 
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
 
+    wrapper-manager = {
+      url = "github:viperML/wrapper-manager";
+# WM's nixpkgs is only used for tests, you can safely drop this if needed.
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     #    homebrew-core = {
     #      url = "github:homebrew/homebrew-core";
     #      flake = false;
@@ -22,64 +27,15 @@
     #    };
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, home-manager }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, home-manager, wrapper-manager }:
     let
       configuration = { pkgs, config, ... }: {
         # List packages installed in system profile. To search by name, run:
 
         # $ nix-env -qaP | grep wget
         nixpkgs.config.allowUnfree = true;
-        environment.systemPackages =
-          [ 
-            # fonts
-            pkgs.nerd-fonts.fira-code
-            pkgs.sketchybar-app-font
-
-            # basic packages
-            pkgs.thefuck
-            pkgs.atuin
-            pkgs.starship
-            pkgs.mkalias
-            pkgs.neovim
-            pkgs.zoxide
-            pkgs.tree
-            pkgs.fd
-            pkgs.fzf
-            pkgs.skhd
-            pkgs.sketchybar
-
-            # development
-            pkgs.asdf-vm
-            pkgs.sops
-            pkgs.rbenv
-            pkgs.jq
-            pkgs.yq
-            pkgs.gnupg
-            pkgs.lazygit
-            pkgs.gh
-            pkgs.dive
-            pkgs.git
-            pkgs.wireguard-tools
-            pkgs.go
-            # python
-
-            # cloud 
-            pkgs.k9s
-            pkgs.cloudlens
-            pkgs.awscli2
-            pkgs.istioctl
-            pkgs.kubectl
-            pkgs.kubernetes-helm
-            pkgs.kubeseal
-            pkgs.eksctl
-            pkgs.kustomize
-            pkgs.steampipe
-            pkgs.steampipePackages.steampipe-plugin-aws
-
-            # GUI Apps
-            #pkgs.alacritty
-
-          ];
+        # packages should declare in home.nix
+        # environment.systemPackages = [ ];
         homebrew = {
           enable = true;
           taps = [
@@ -93,6 +49,8 @@
             "logcli"
             "micromamba"
             "tmux"
+            "tmuxinator"
+            "just" # casey/just for justfile runner
             #  "wireguard-go"
             "antidote"
             "golang"
@@ -210,7 +168,9 @@
             home-manager.useUserPackages = true;
             home-manager.backupFileExtension = "nixbk";
             home-manager.users.khoinguyen = import ./home.nix;
-
+	    home-manager.extraSpecialArgs = {
+		inherit wrapper-manager;
+	    };
             # Optionally, use home-manager.extraSpecialArgs to pass
             # arguments to home.nix
           }

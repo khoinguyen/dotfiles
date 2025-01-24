@@ -1,9 +1,10 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, wrapper-manager, ... }:
 let 
   dotfiles_dir = ../..;
   homeDir = "/Users/khoinguyen";
+  nvimDir = homeDir + ./dotfiles/nvim;
 in
-{
+  {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = "khoinguyen";
@@ -34,28 +35,6 @@ in
 
   #   '';
   # };
-  programs.kitty = {
-    enable = false;
-    themeFile = "Catppuccin-Frappe";
-    font.name = "MesloLGL Nerd Font Mono";
-  };
-  programs.alacritty = {
-    enable = false;
-    settings = {
-      font.normal = {
-        family = "FiraCode Nerd Font";
-        style = "Regular";
-      };
-      font.bold = {
-        family = "FiraCode Nerd Font";
-        style = "Bold";
-      };
-      font.italic = {
-        family = "FiraCode Nerd Font";
-        style = "Italic";
-      };
-    };
-  };
   programs.nushell = {
     enable = true;
     shellAliases = {
@@ -90,10 +69,10 @@ in
       { name = "done"; src = pkgs.fishPlugins.done; }
       { name = "git-abbr"; 
         src = pkgs.fetchFromGitHub {
-              owner = "lewisacidic";
-              repo = "fish-git-abbr";
-              rev = "9967009cf7b14459f5062d9d55e2840801746bb6";
-              sha256 = "sha256-wye76M1fkKEmEGJI9zXBIgLr7T8dBIgJudwTXWOIFjg=";
+          owner = "lewisacidic";
+          repo = "fish-git-abbr";
+          rev = "9967009cf7b14459f5062d9d55e2840801746bb6";
+          sha256 = "sha256-wye76M1fkKEmEGJI9zXBIgLr7T8dBIgJudwTXWOIFjg=";
         };
       }
       { name = "grc"; src = pkgs.fishPlugins.grc; }
@@ -131,7 +110,7 @@ in
       fi
       unset __mamba_setup
       # <<< mamba initialize <<<
-      
+
       # Integration for .iterm2
       test -e "${homeDir}/.iterm2_shell_integration.zsh" && source "${homeDir}/.iterm2_shell_integration.zsh"
       for file in ${homeDir}/.zshrc.d/*.sh; do
@@ -173,6 +152,7 @@ in
       "joshskidmore/zsh-fzf-history-search"
       "zsh-users/zsh-autosuggestions"
       "atuinsh/atuin"
+      "jeffreytse/zsh-vi-mode"
     ];
   };
   programs.starship = {
@@ -182,19 +162,62 @@ in
   };
   home.sessionPath = [
     "/opt/homebrew/bin"
+  ];
+  home.packages = [
 
+    pkgs.nerd-fonts.fira-code
+    pkgs.sketchybar-app-font
+
+    # basic packages
+    pkgs.thefuck
+    pkgs.atuin
+    pkgs.starship
+    pkgs.mkalias
+    pkgs.neovim
+    pkgs.zoxide
+    pkgs.tree
+    pkgs.fd
+    pkgs.fzf
+    pkgs.skhd
+    pkgs.sketchybar
+
+    # development
+    pkgs.asdf-vm
+    pkgs.sops
+    pkgs.rbenv
+    pkgs.jq
+    pkgs.yq
+    pkgs.gnupg
+    pkgs.lazygit
+    pkgs.gh
+    pkgs.dive
+    pkgs.git
+    pkgs.wireguard-tools
+    pkgs.go
+    # python
+
+    # cloud 
+    pkgs.k9s
+    pkgs.cloudlens
+    pkgs.awscli2
+    pkgs.istioctl
+    pkgs.kubectl
+    pkgs.kubernetes-helm
+    pkgs.kubeseal
+    pkgs.eksctl
+    pkgs.kustomize
+    pkgs.steampipe
+    pkgs.steampipePackages.steampipe-plugin-aws
+
+    pkgs.devbox
+    # GUI Apps
+    #pkgs.alacritty
   ];
   home.file = {
     ".config/skhd/skhdrc".source = dotfiles_dir + /dot-config/skhd/skhdrc;
     ".zalias".source = dotfiles_dir + /zshrc/dot-zalias;
     ".zshrc.d".source = dotfiles_dir + /zshrc/dot-zshrc.d;
-#    ".config/nvim".source = dotfiles_dir + /dot-config/nvim;
-    ".wezterm.lua".text = ''
-      local wezterm = require 'wezterm'
-      local config = wezterm.config_builder()
-      config.color_scheme = 'catppuccin-macchiato'
-      return config
-    '';
+    ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink nvimDir;
   };
   home.activation = {
     debugAction = lib.hm.dag.entryAfter ["setupLaunchAgents"] ''

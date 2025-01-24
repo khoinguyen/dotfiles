@@ -5,3 +5,4 @@ zsh-users/zsh-history-substring-search
 joshskidmore/zsh-fzf-history-search
 zsh-users/zsh-autosuggestions
 atuinsh/atuin
+jeffreytse/zsh-vi-mode

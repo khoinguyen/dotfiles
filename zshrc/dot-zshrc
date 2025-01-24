@@ -35,7 +35,9 @@ type starship_zle-keymap-select >/dev/null || \
 
 alias vim=nvim
 export EDITOR=nvim
+alias v=vim
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
 
 if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
   export PATH=/opt/homebrew/opt/ruby/bin:$PATH
