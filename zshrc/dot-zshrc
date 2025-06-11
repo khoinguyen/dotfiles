@@ -1,5 +1,6 @@
 bindkey -v
 eval "$(/opt/homebrew/bin/brew shellenv)"
+unsetopt correctall
 # Load antidote: https://getantidote.github.io/
 # Set the root name of the plugins files (.txt and .zsh) antidote will use.
 zsh_plugins=${ZDOTDIR:-~}/.zsh_plugins

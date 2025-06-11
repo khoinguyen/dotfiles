@@ -12,11 +12,6 @@
 
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
 
-    wrapper-manager = {
-      url = "github:viperML/wrapper-manager";
-# WM's nixpkgs is only used for tests, you can safely drop this if needed.
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     #    homebrew-core = {
     #      url = "github:homebrew/homebrew-core";
     #      flake = false;
@@ -27,7 +22,7 @@
     #    };
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, home-manager, wrapper-manager }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, home-manager }:
     let
       configuration = { pkgs, config, ... }: {
         # List packages installed in system profile. To search by name, run:
@@ -41,16 +36,18 @@
           taps = [
             "nikitabobko/tap"
             "fluxcd/tap"
+            "FelixKratz/formulae"
           ];
           brews = [
             "mas"
             "zoxide"
             "fluxcd/tap/flux@2.2"
             "logcli"
-            "micromamba"
             "tmux"
             "tmuxinator"
             "just" # casey/just for justfile runner
+            # Handy tools
+            "watch"
             #  "wireguard-go"
             "antidote"
             "golang"
@@ -62,6 +59,9 @@
             # devtool
             "mimirtool" 
             "gtypist"
+            "dagger"
+            "sketchybar"
+            "kind"
           ];
           casks = [
             "hammerspoon"
@@ -76,8 +76,9 @@
             "notion"
             "visual-studio-code"
             "orbstack"
-            "wezterm"
             "ghostty"
+            "font-hack-nerd-font"
+            "warp"
           ];
           masApps = {
             "Pine Player" = 1112075769;
@@ -127,19 +128,15 @@
         # $ darwin-rebuild changelog
         system.stateVersion = 5;
 
-        security.pam.enableSudoTouchIdAuth = true;
+        security.pam.services.sudo_local.touchIdAuth = true;
         users.users.khoinguyen.home = "/Users/khoinguyen";
-        nix.configureBuildUsers = true;
-
-        nix.useDaemon = true;
-        # Auto upgrade nix package and the daemon service.
-        services.nix-daemon.enable = true;
+        system.primaryUser = "khoinguyen";
       };
     in
       {
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#Khois-MacBook-Pro
-      darwinConfigurations."Khois-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+      darwinConfigurations."Darwin-arm64" = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         specialArgs = {
           inherit inputs;
@@ -168,9 +165,6 @@
             home-manager.useUserPackages = true;
             home-manager.backupFileExtension = "nixbk";
             home-manager.users.khoinguyen = import ./home.nix;
-	    home-manager.extraSpecialArgs = {
-		inherit wrapper-manager;
-	    };
             # Optionally, use home-manager.extraSpecialArgs to pass
             # arguments to home.nix
           }

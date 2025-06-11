@@ -2,7 +2,7 @@
 let 
   dotfiles_dir = ../..;
   homeDir = "/Users/khoinguyen";
-  nvimDir = homeDir + ./dotfiles/nvim;
+  nvimDir = dotfiles_dir + ./nvim;
 in
   {
   # Home Manager needs a bit of information about you and the
@@ -57,7 +57,7 @@ in
     shellAliases = {
       "vim" = "nvim";
       "nv"  = "vim ${homeDir}/dotfiles/dot-config/nix-darwin";
-      "nr"  = "darwin-rebuild switch --flake ~/dotfiles/dot-config/nix-darwin";
+      "nr"  = "sudo darwin-rebuild switch --flake ~/dotfiles/dot-config/nix-darwin#$(uname -o)-$(uname -m)";
     };
     interactiveShellInit = ''
       set -g fish_key_bindings fish_vi_key_bindings
@@ -93,9 +93,11 @@ in
     envExtra = "source ~/.zalias";
     shellAliases = {
       "v" = "nvim";
+      "nr"  = "sudo darwin-rebuild switch --flake ~/dotfiles/dot-config/nix-darwin#$(uname -o)-$(uname -m)";
+
     };
     autocd = true;
-    initExtra = ''
+    initContent = ''
       . "${pkgs.asdf-vm}/share/asdf-vm/asdf.sh"
 
       # >>> mamba initialize >>>
@@ -166,10 +168,8 @@ in
   home.packages = [
 
     pkgs.nerd-fonts.fira-code
-    pkgs.sketchybar-app-font
 
     # basic packages
-    pkgs.thefuck
     pkgs.atuin
     pkgs.starship
     pkgs.mkalias
@@ -178,8 +178,6 @@ in
     pkgs.tree
     pkgs.fd
     pkgs.fzf
-    pkgs.skhd
-    pkgs.sketchybar
 
     # development
     pkgs.asdf-vm
@@ -213,16 +211,17 @@ in
     # GUI Apps
     #pkgs.alacritty
   ];
+  xdg.configFile.nvim = {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nvim";
+  };
   home.file = {
     ".config/skhd/skhdrc".source = dotfiles_dir + /dot-config/skhd/skhdrc;
     ".zalias".source = dotfiles_dir + /zshrc/dot-zalias;
     ".zshrc.d".source = dotfiles_dir + /zshrc/dot-zshrc.d;
-    ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink nvimDir;
   };
   home.activation = {
     debugAction = lib.hm.dag.entryAfter ["setupLaunchAgents"] ''
       echo "After setupLaunchAgents"
-      run ${pkgs.skhd}/bin/skhd -r
     '';
 
   };
