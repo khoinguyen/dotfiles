@@ -1,4 +1,4 @@
-{ config, pkgs, lib, wrapper-manager, ... }:
+{ config, pkgs, lib, ... }:
 let 
   dotfiles_dir = ../..;
   homeDir = "/Users/khoinguyen";

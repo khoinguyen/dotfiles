@@ -37,6 +37,8 @@
             "nikitabobko/tap"
             "fluxcd/tap"
             "FelixKratz/formulae"
+            "kubeshop/botkube"
+            "go-task/tap"
           ];
           brews = [
             "mas"
@@ -62,6 +64,8 @@
             "dagger"
             "sketchybar"
             "kind"
+            "kubeshop/botkube/botkube"
+            "go-task/tap/go-task"
           ];
           casks = [
             "hammerspoon"

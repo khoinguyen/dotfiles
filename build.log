@@ -1,0 +1,56 @@
+setting up user launchd services...
+Using nikitabobko/tap
+Using fluxcd/tap
+Using mas
+Using mas
+Using zoxide
+Using fluxcd/tap/flux@2.2
+Using logcli
+Using micromamba
+Using tmux
+Using tmuxinator
+Using just
+Using antidote
+Using golang
+Using yazi
+Using ast-grep
+Using ripgrep
+Using tree-sitter
+Using chafa
+Using mimirtool
+Using gtypist
+Using hammerspoon
+Using aerospace
+Using 1password
+Using 1password-cli
+Using slack
+Using postman
+Using mongodb-compass
+Using keepingyouawake
+Using zoom
+Using notion
+Using visual-studio-code
+Using orbstack
+Using wezterm
+Using ghostty
+Using Pine Player
+Homebrew Bundle complete! 35 Brewfile dependencies now installed.
+Activating home-manager configuration for khoinguyen
+Starting Home Manager activation
+Activating checkFilesChanged
+Activating checkLaunchAgents
+Activating checkLinkTargets
+Activating writeBoundary
+Activating linkGeneration
+Cleaning up orphan links from /Users/khoinguyen
+No change so reusing latest profile generation 23
+Creating home file links in /Users/khoinguyen
+Activating batCache
+No themes were found in '/Users/khoinguyen/.config/bat/themes', using the default set
+No syntaxes were found in '/Users/khoinguyen/.config/bat/syntaxes', using the default set.
+Writing theme set to /Users/khoinguyen/.cache/bat/themes.bin ... okay
+Writing syntax set to /Users/khoinguyen/.cache/bat/syntaxes.bin ... okay
+Writing metadata to folder /Users/khoinguyen/.cache/bat ... okay
+Activating setupLaunchAgents
+Activating debugAction
+After setupLaunchAgents
