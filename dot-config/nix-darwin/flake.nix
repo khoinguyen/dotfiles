@@ -38,7 +38,7 @@
             "fluxcd/tap"
             "FelixKratz/formulae"
             "kubeshop/botkube"
-            "go-task/tap"
+            "dagger/tap"
           ];
           brews = [
             "mas"
@@ -48,6 +48,7 @@
             "tmux"
             "tmuxinator"
             "just" # casey/just for justfile runner
+            "jj"
             # Handy tools
             "watch"
             #  "wireguard-go"
@@ -65,7 +66,9 @@
             "sketchybar"
             "kind"
             "kubeshop/botkube/botkube"
-            "go-task/tap/go-task"
+            "dagger/tap/dagger"
+            "trivy"
+            "taskwarrior-tui"
           ];
           casks = [
             "hammerspoon"

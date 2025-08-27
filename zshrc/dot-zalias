@@ -1,3 +1,4 @@
+alias ssh="TERM=xterm-256color ssh"
 alias lg=lazygit
 alias kc=kubectl
 alias vim=nvim
@@ -91,17 +92,28 @@ function grd() {
   git checkout -
   git rebase develop
 }
+function default_browser() {
+  plutil -extract LSHandlers xml1 -o - ~/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist | grep -B2 http | grep string | grep -v http | awk -F'>|<' '{print $3}' | head -1
+}
 function gpm() {
   git push
-  PR_URL=$(gh pr create --fill)
+  gh pr create --fill
   gh pr merge
-  open -a "Zen Browser" $PR_URL/files
+}
+function git_approve_pr() {
+  GH_TOKEN="$BOT_GH_PAT" gh pr review $PR --approve --body "#self-approved"
+}
+function gpma() {
+  gpm
+  git_approve_pr
+  gh pr view
 }
 function gpfm() {
   git push --force-with-lease
-  PR_URL=$(gh pr create --fill)
+  gh pr create --fill
   gh pr merge
-  open -a "Zen Browser" $PR_URL/files
+  git_approve_pr
+  gh pr view
 }
 function aws_login() {
   aws sso login --profile ampup-sso

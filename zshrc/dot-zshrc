@@ -20,6 +20,7 @@ fi
 # Source your static plugins file.
 source ${zsh_plugins}.zsh
 
+export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.tmuxifier/bin:$PATH"
 # export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 # export PATH="/opt/homebrew/opt/libpq/bin:$PATH"

@@ -126,6 +126,7 @@ alt-shift-m = 'move-node-to-workspace Message'
 alt-shift-t = 'move-node-to-workspace Terminal'
 alt-shift-z = 'move-node-to-workspace Zoom'
 
+f19 = 'exec-and-forget aerospace list-workspaces --empty no --monitor focused | aerospace workspace --wrap-around next'
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
@@ -199,8 +200,11 @@ run = 'move-node-to-workspace Terminal'
 
 # Browser apps
 [[on-window-detected]]
-if.app-id = 'company.thebrowser.Browser'
+if.app-name-regex-substring = '(Arc|Zen|Vivaldi)'
 run = 'move-node-to-workspace Browser'
+[[on-window-detected]]
+if.app-name-regex-substring = 'Cursor'
+run = 'move-node-to-workspace Code'
 
 [[on-window-detected]]
 if.app-id = 'org.mozilla.com.zen.browser'

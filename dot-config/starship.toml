@@ -2,7 +2,11 @@
 #right_format = '$time'
 continuation_prompt = '▶▶ '
 [kubernetes]
+format = 'on [$symbol$context \($namespace\)](dimmed green) '
 disabled = false
+[[kubernetes.contexts]]
+context_pattern = "arn:aws:.*/(?P<cluster>[\\w-]+)"
+context_alias = "aws-$cluster"
 
 [aws]
 disabled = false
