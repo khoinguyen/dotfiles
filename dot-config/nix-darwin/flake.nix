@@ -48,6 +48,7 @@
             "tmux"
             "tmuxinator"
             "just" # casey/just for justfile runner
+            "git-delta"
             "jj"
             # Handy tools
             "watch"
