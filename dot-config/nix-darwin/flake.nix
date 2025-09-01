@@ -41,6 +41,7 @@
             "dagger/tap"
           ];
           brews = [
+            "tldr"
             "mas"
             "zoxide"
             "fluxcd/tap/flux@2.2"
