@@ -88,6 +88,7 @@
             "ghostty"
             "font-hack-nerd-font"
             "warp"
+            "libreoffice"
           ];
           masApps = {
             "Pine Player" = 1112075769;
