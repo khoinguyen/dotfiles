@@ -35,16 +35,19 @@
           enable = true;
           taps = [
             "nikitabobko/tap"
+            "confluentinc/tap"
             "fluxcd/tap"
             "FelixKratz/formulae"
             "kubeshop/botkube"
             "dagger/tap"
+            "atlassian/homebrew-acli"
+            "atomicjar/tap"
           ];
           brews = [
             "tldr"
             "mas"
             "zoxide"
-            "fluxcd/tap/flux@2.2"
+            "confluentinc/tap/cli"
             "logcli"
             "tmux"
             "tmuxinator"
@@ -64,17 +67,21 @@
             # devtool
             "mimirtool" 
             "gtypist"
-            "dagger"
-            "sketchybar"
+            #"dagger"
+            "ffmpeg"
+            #  "sketchybar"
             "kind"
             "kubeshop/botkube/botkube"
             "dagger/tap/dagger"
             "trivy"
             "taskwarrior-tui"
+            "kubetail"
+            # Atlassian
+            "atlassian/homebrew-acli/acli"
           ];
           casks = [
             "hammerspoon"
-            "aerospace"
+            #"aerospace"
             "1password"
             "1password-cli"
             "slack"
@@ -89,9 +96,11 @@
             "font-hack-nerd-font"
             "warp"
             "libreoffice"
+            "testcontainers-desktop"
+            "tana"
+            "thaw"
           ];
           masApps = {
-            "Pine Player" = 1112075769;
           };
           onActivation.cleanup = "zap";
           onActivation.autoUpdate = true;
@@ -107,7 +116,7 @@
           env = pkgs.buildEnv {
             name = "system-applications";
             paths = config.environment.systemPackages;
-            pathsToLink = "/Applications";
+            pathsToLink = ["/Applications"];
           };
         in
           pkgs.lib.mkForce ''

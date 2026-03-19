@@ -118,6 +118,7 @@ in
       for file in ${homeDir}/.zshrc.d/*.sh; do
           source "$file"
       done
+      export PATH="$HOME/.local/bin:$PATH"
     '';
   };
   programs.bat.enable = true;
