@@ -1,6 +1,6 @@
 bindkey -v
 eval "$(/opt/homebrew/bin/brew shellenv)"
-unsetopt correctall
+# unsetopt correctall
 # Load antidote: https://getantidote.github.io/
 # Set the root name of the plugins files (.txt and .zsh) antidote will use.
 zsh_plugins=${ZDOTDIR:-~}/.zsh_plugins
@@ -21,13 +21,12 @@ fi
 source ${zsh_plugins}.zsh
 
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/.tmuxifier/bin:$PATH"
 # export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 # export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 export XDG_CONFIG_HOME=$HOME/.config
 # Customize to your needs...
 
-autoload -Uz compinit && compinit
+autoload -Uz compinit && compinit -C
 # Check that the function `starship_zle-keymap-select()` is defined.
 # xref: https://github.com/starship/starship/issues/3418
 type starship_zle-keymap-select >/dev/null || \
@@ -36,8 +35,8 @@ type starship_zle-keymap-select >/dev/null || \
   }
 
 alias vim=nvim
-export EDITOR=nvim
 alias v=vim
+export EDITOR=nvim
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 
@@ -47,22 +46,10 @@ if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
 fi
 
 source ${ZDOTDIR:-$HOME}/.zalias
-for file in ${ZDOTDIR:-$HOME}/.zshrc.d/*.sh; do
+for file in ${ZDOTDIR:-$HOME}/.zshrc.d/*.sh(N); do
     source "$file"
 done
 
 source $XDG_CONFIG_HOME/op/plugins.sh
 source <(kubectl completion zsh)
-
-# >>> mamba initialize >>>
-# !! Contents within this block are managed by 'micromamba shell init' !!
-export MAMBA_EXE='/opt/homebrew/bin/micromamba';
-export MAMBA_ROOT_PREFIX='/opt/homebrew';
-__mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__mamba_setup"
-else
-    alias micromamba="$MAMBA_EXE"  # Fallback on help from micromamba activate
-fi
-unset __mamba_setup
-# <<< mamba initialize <<<
+eval "$(mise activate zsh)"
