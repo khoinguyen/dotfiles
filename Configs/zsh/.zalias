@@ -170,10 +170,8 @@ alias wgu="sudo wg-quick up ~/wireguard.conf/default.conf"
 alias wgd="sudo wg-quick down ~/wireguard.conf/default.conf"
 alias wgs="sudo wg"
 function wgr() {
-  wgs | grep interface
-  if [[ $? == 0 ]]; then
-    wgd
-  fi
-
+  sudo pkill -f wireguard-go 2>/dev/null || true
+  sudo rm -f /var/run/wireguard/default.name /var/run/wireguard/*.sock
   wgu
+  wgs
 }
