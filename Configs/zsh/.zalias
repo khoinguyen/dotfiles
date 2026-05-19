@@ -132,8 +132,29 @@ function onsleep() {
   sudo pmset -a disablesleep 0
 }
 
-alias nr="darwin-rebuild switch --flake ~/dotfiles/dot-config/nix-darwin"
-alias nv="vim ~/dotfiles/dot-config/nix-darwin/"
+function brewi() {
+  local type="brew"
+  local pkg="$1"
+  if [[ "$1" == "--cask" || "$1" == "-c" ]]; then
+    type="cask"
+    pkg="$2"
+  fi
+  if [[ -z "$pkg" ]]; then
+    echo "Usage: brewi [--cask|-c] <package>"
+    return 1
+  fi
+  local brewfile="$HOME/.dotfiles/Brewfile"
+  if grep -qE "^(brew|cask) \"${pkg}\"" "$brewfile"; then
+    echo "${pkg} already in Brewfile"
+    return 1
+  fi
+  echo "${type} \"${pkg}\"" >> "$brewfile"
+  if [[ "$type" == "cask" ]]; then
+    brew install --cask "$pkg"
+  else
+    brew install "$pkg"
+  fi
+}
 
 
 # Wireguard alias
