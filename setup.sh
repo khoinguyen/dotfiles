@@ -34,7 +34,7 @@ fi
 
 if [[ -f "$DOTFILES_DIR/Brewfile" ]]; then
   log "Installing from Brewfile..."
-  brew bundle --file="$DOTFILES_DIR/Brewfile" --no-lock
+  brew bundle --file="$DOTFILES_DIR/Brewfile"
   success "Brewfile packages installed"
 else
   log "No Brewfile found, skipping"

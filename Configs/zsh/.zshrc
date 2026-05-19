@@ -50,6 +50,5 @@ for file in ${ZDOTDIR:-$HOME}/.zshrc.d/*.sh(N); do
     source "$file"
 done
 
-source $XDG_CONFIG_HOME/op/plugins.sh
 source <(kubectl completion zsh)
 eval "$(mise activate zsh)"
