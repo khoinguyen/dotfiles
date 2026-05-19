@@ -148,6 +148,14 @@ function brewi() {
     echo "${pkg} already in Brewfile"
     return 1
   fi
+  # tap-based formula: org/repo/formula → ensure tap "org/repo" present
+  if [[ "$pkg" == */*/* ]]; then
+    local tap="${pkg%/*}"  # strips /formula → org/repo
+    if ! grep -qE "^tap \"${tap}\"" "$brewfile"; then
+      echo "tap \"${tap}\"" >> "$brewfile"
+      brew tap "$tap"
+    fi
+  fi
   echo "${type} \"${pkg}\"" >> "$brewfile"
   if [[ "$type" == "cask" ]]; then
     brew install --cask "$pkg"
