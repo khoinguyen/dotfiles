@@ -75,11 +75,15 @@ mkdir -p ~/.ssh && chmod 700 ~/.ssh
 touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys
 
 log "Fetching public keys from sshid.io..."
-curl -fs https://sshid.io/khoinguyen | while IFS= read -r key; do
-  [[ -z "$key" ]] && continue
-  grep -qF "$key" ~/.ssh/authorized_keys || echo "$key" >> ~/.ssh/authorized_keys
-done
-success "SSH keys updated"
+if keys=$(curl -fs https://sshid.io/khoinguyen); then
+  while IFS= read -r key; do
+    [[ -z "$key" ]] && continue
+    grep -qF "$key" ~/.ssh/authorized_keys || echo "$key" >> ~/.ssh/authorized_keys
+  done <<< "$keys"
+  success "SSH keys updated"
+else
+  log "Could not fetch keys from sshid.io (skipping)"
+fi
 
 # ─────────────────────────────────────────────
 section "Remote Login (sshd)"
