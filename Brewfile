@@ -47,6 +47,7 @@ brew "zstd"                # compression
 
 # ── Kubernetes & Cloud ─────────────────────────────────────────────────────────
 brew "awscli"
+brew "gcloud-cli"          # Google Cloud SDK
 brew "helm"
 brew "jira-cli"
 brew "kind"                # local k8s clusters
@@ -89,4 +90,3 @@ cask "zoom"
 # ── Mac App Store ──────────────────────────────────────────────────────────────
 mas "Pine Player", id: 1112075769
 mas "The Unarchiver", id: 425424353
-brew "gcloud-cli"
