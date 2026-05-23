@@ -76,6 +76,7 @@ cask "firefox"
 cask "hammerspoon"
 cask "keepingyouawake"
 cask "lulu"                # network firewall
+cask "tailscale"
 cask "orbstack"
 cask "postman"
 cask "slack"
@@ -85,5 +86,4 @@ cask "zoom"
 
 # ── Mac App Store ──────────────────────────────────────────────────────────────
 mas "Pine Player", id: 1112075769
-mas "Tailscale", id: 1475387142
 mas "The Unarchiver", id: 425424353
