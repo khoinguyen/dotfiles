@@ -24,6 +24,7 @@ brew "tree-sitter"
 cask "visual-studio-code"
 
 # ── CLI Utilities ──────────────────────────────────────────────────────────────
+brew "mas"                 # Mac App Store CLI
 brew "ast-grep"            # structural code search
 brew "bat"                 # cat with syntax highlighting
 brew "eza"                 # ls replacement
@@ -74,9 +75,15 @@ cask "daisydisk"
 cask "firefox"
 cask "hammerspoon"
 cask "keepingyouawake"
+cask "lulu"                # network firewall
 cask "orbstack"
 cask "postman"
 cask "slack"
 cask "tana"
 cask "thaw"
 cask "zoom"
+
+# ── Mac App Store ──────────────────────────────────────────────────────────────
+mas "Pine Player", id: 1112075769
+mas "Tailscale", id: 1475387142
+mas "The Unarchiver", id: 425424353
