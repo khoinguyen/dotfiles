@@ -22,7 +22,9 @@ Tuckr maps `Configs/<Name>/` → `~/`. Each `Configs/<Name>/` subtree mirrors th
 
 - `Configs/zsh/.zshrc` → `~/.zshrc`
 - `Configs/nvim/.config/nvim/` → `~/.config/nvim/`
-- `Configs/tmux/.config/tmux/dot-tmux.conf` → `~/.config/tmux/.tmux.conf` (note: tuckr strips `dot-` prefix → `.tmux.conf`)
+- `Configs/tmux/.config/tmux/tmux.conf` → `~/.config/tmux/tmux.conf`
+
+Note: this tuckr does **not** strip a `dot-` prefix — name files exactly as they should appear in `~` (e.g. `.zshrc`, `tmux.conf`).
 
 To re-link after changes:
 ```bash
@@ -38,7 +40,7 @@ tuckr add \* --force
 | zsh plugins | `Configs/zsh/.zsh_plugins.txt` (antidote) |
 | zsh extras | `Configs/zsh/.zshrc.d/*.sh` (auto-sourced) |
 | neovim | `Configs/nvim/.config/nvim/` (LazyVim) |
-| tmux | `Configs/tmux/.config/tmux/dot-tmux.conf` |
+| tmux | `Configs/tmux/.config/tmux/tmux.conf` |
 | tmux sessions | `Configs/tmux/.config/tmux-layouts/*.session.sh` |
 | starship | `Configs/starship/.config/starship.toml` |
 | mise | `Configs/mise/.config/mise/config.toml` |

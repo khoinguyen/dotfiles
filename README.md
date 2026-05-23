@@ -29,7 +29,7 @@ Tuckr maps `Configs/<Name>/` → `~/`. Each subtree mirrors the home directory:
 |-----------|-----------|
 | `Configs/zsh/.zshrc` | `~/.zshrc` |
 | `Configs/nvim/.config/nvim/` | `~/.config/nvim/` |
-| `Configs/tmux/.config/tmux/dot-tmux.conf` | `~/.config/tmux/.tmux.conf` (tuckr strips `dot-`) |
+| `Configs/tmux/.config/tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
 
 Re-link after changes:
 
