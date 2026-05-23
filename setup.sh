@@ -10,6 +10,7 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 log() { echo "  ▸ $*"; }
 success() { echo "  ✔ $*"; }
+warn() { echo "  $(tput setaf 1)✖ $*$(tput sgr0)"; }
 section() {
   echo
   echo "── $* ──────────────────────────────────────"
@@ -82,7 +83,7 @@ if keys=$(curl -fs https://sshid.io/khoinguyen); then
   done <<< "$keys"
   success "SSH keys updated"
 else
-  log "Could not fetch keys from sshid.io (skipping)"
+  warn "Could not fetch keys from sshid.io (skipping)"
 fi
 
 # ─────────────────────────────────────────────
