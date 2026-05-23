@@ -76,12 +76,14 @@ cask "firefox"
 cask "hammerspoon"
 cask "keepingyouawake"
 cask "lulu"                # network firewall
+cask "obsidian"
 cask "tailscale-app"
 cask "orbstack"
 cask "postman"
 cask "slack"
 cask "tana"
 cask "thaw"
+cask "vivaldi"
 cask "zoom"
 
 # ── Mac App Store ──────────────────────────────────────────────────────────────
