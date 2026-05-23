@@ -44,12 +44,21 @@ tuckr add \* --force
 
 ## Architecture notes
 
-**Shell**: zsh with antidote for plugin management. Plugins declared in `.zsh_plugins.txt`; antidote compiles to `.zsh_plugins.zsh` (static bundle, regenerated when txt is newer). Extra configs in `.zshrc.d/` are sourced automatically — add new tool configs there.
+**Shell**: zsh with antidote for plugin management. Plugins declared in `.zsh_plugins.txt`; antidote compiles to `.zsh_plugins.zsh` (static bundle, regenerated when txt is newer). Extra configs in `.zshrc.d/` are sourced automatically — add new tool configs there. Key plugins: zsh-vi-mode, zsh-autosuggestions, zsh-syntax-highlighting, fzf history search, atuin (shell history).
 
-**Neovim**: LazyVim distro. Entry point is `init.lua` → `config/lazy`. Custom plugins in `lua/plugins/`. Plugin list locked in `lazy-lock.json`.
+**Neovim**: LazyVim distro. Entry point is `init.lua` → `config/lazy.lua`. Custom plugins in `lua/plugins/`. Plugin list locked in `lazy-lock.json`. Colorscheme is gruvbox-material. neo-tree is disabled (uses yazi instead). pyright is configured to look for `.venv` in project root.
 
 **Tmux**: TPM-managed. Catppuccin theme. vim-tmux-navigator for pane navigation (shared with neovim). Session layouts in `tmux-layouts/` are shell scripts to recreate named tmux sessions.
 
 **Runtime versions**: mise manages `gh` and `node` globally (`Configs/mise/.config/mise/config.toml`).
 
+**`scripts/`**: Standalone Python project (uv-managed, requires Python ≥ 3.11) for macOS Photos utilities. Has its own `.venv` and `pyproject.toml`. Run with `uv run` inside the `scripts/` directory.
+
 **`run.sh`**: Legacy stow-based script — superseded by `tuckr` in `setup.sh`. Do not use.
+
+## Adding new tool configs
+
+1. Create `Configs/<ToolName>/` mirroring the home directory layout.
+2. Run `tuckr add \* --force` to symlink.
+3. For shell environment setup, add a file to `Configs/zsh/.zshrc.d/<tool>.sh` — it will be sourced automatically.
+4. Add any new packages to `Brewfile`.
