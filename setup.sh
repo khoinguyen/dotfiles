@@ -68,6 +68,17 @@ else
 fi
 
 # ─────────────────────────────────────────────
+section "SSH authorized_keys"
+# ─────────────────────────────────────────────
+
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
+touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys
+
+log "Fetching public keys from sshid.io..."
+curl -fs https://sshid.io/khoinguyen >> ~/.ssh/authorized_keys
+success "SSH keys updated"
+
+# ─────────────────────────────────────────────
 section "Remote Login (sshd)"
 # ─────────────────────────────────────────────
 
