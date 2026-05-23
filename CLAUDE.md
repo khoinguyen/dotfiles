@@ -12,7 +12,9 @@ macOS dotfiles managed with **tuckr** for symlinking and **Homebrew** for packag
 ./setup.sh
 ```
 
-Does in order: installs Homebrew → runs `brew bundle --file=Brewfile` → applies macOS defaults → enables Touch ID for sudo → runs `tuckr add \* --force` to symlink all configs.
+Does in order: installs Homebrew → runs `brew bundle --file=Brewfile` → applies macOS defaults → enables Touch ID for sudo → fetches SSH public keys from `sshid.io/khoinguyen` into `~/.ssh/authorized_keys` → enables Remote Login (sshd) → runs `tuckr add \* --force` to symlink all configs. The script is idempotent — safe to re-run.
+
+**Remote access**: Mac and phone share a Tailscale network; SSH in with `ssh khoinguyen@khoi-mbp` (MagicDNS hostname). App Store apps are managed declaratively via `mas` entries in the Brewfile.
 
 ## Dotfile management (tuckr)
 
