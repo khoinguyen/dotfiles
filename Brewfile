@@ -1,69 +1,82 @@
+# ── Taps ──────────────────────────────────────────────────────────────────────
 tap "atlassian/acli"
 tap "atomicjar/tap"
 tap "confluentinc/tap"
 tap "felixkratz/formulae"
 tap "fluxcd/tap"
+tap "grafana/grafana"
 tap "kubeshop/botkube"
 tap "nikitabobko/tap"
-brew "tuckr"
-brew "atuin"
-brew "tree"
+
+# ── Shell & Terminal ───────────────────────────────────────────────────────────
+brew "antidote"            # zsh plugin manager
+brew "atuin"               # shell history
+brew "starship"            # prompt
+brew "tmux"                # terminal multiplexer
+brew "tuckr"               # dotfiles symlink manager
+brew "zoxide"              # smart cd
+cask "ghostty"
+cask "warp"
+
+# ── Editors ────────────────────────────────────────────────────────────────────
 brew "neovim"
-brew "antidote"
-brew "zstd"
-brew "ast-grep"
-brew "openssl@3"
-brew "awscli"
-brew "ffmpeg"
-brew "git-delta"
-brew "jira-cli"
-brew "just"
-brew "kind"
-brew "kubernetes-cli"
-brew "stern"
-brew "k9s"
-brew "mise"
-brew "ripgrep"
-brew "snowflake-cli"
-brew "tldr"
-brew "tmux"
-brew "starship"
 brew "tree-sitter"
-brew "trivy"
+cask "visual-studio-code"
+
+# ── CLI Utilities ──────────────────────────────────────────────────────────────
+brew "ast-grep"            # structural code search
+brew "bat"                 # cat with syntax highlighting
+brew "eza"                 # ls replacement
+brew "fd"                  # find replacement
+brew "ffmpeg"
+brew "fzf"                 # fuzzy finder
+brew "git-delta"           # diff pager
+brew "jq"                  # JSON processor
+brew "just"                # command runner
+brew "mise"                # runtime version manager
+brew "openssl@3"
+brew "pet"                 # snippet manager
+brew "ripgrep"             # grep replacement
+brew "tldr"                # simplified man pages
+brew "tree"
 brew "watch"
-brew "yazi"
-brew "pet"
-brew "bat"
-brew "zoxide"
-brew "eza"
-brew "fzf"
-brew "fd"
-brew "jq"
-brew "yq"
+brew "yazi"                # terminal file manager
+brew "yq"                  # YAML/JSON processor
+brew "zstd"                # compression
+
+# ── Kubernetes & Cloud ─────────────────────────────────────────────────────────
+brew "awscli"
+brew "helm"
+brew "jira-cli"
+brew "kind"                # local k8s clusters
+brew "kubernetes-cli"      # kubectl
+brew "k9s"                 # k8s TUI
+brew "snowflake-cli"
+brew "stern"               # k8s log tailing
+brew "trivy"               # vulnerability scanner
 brew "wireguard-tools"
 brew "atlassian/acli/acli"
 brew "confluentinc/tap/cli"
+brew "grafana/grafana/gcx"
 brew "kubeshop/botkube/botkube"
-cask "1password"
-cask "1password-cli"
-cask "claude-code"
+
+# ── Fonts ──────────────────────────────────────────────────────────────────────
 cask "font-fira-code-nerd-font"
 cask "font-hack-nerd-font"
 cask "font-meslo-lg-nerd-font"
-cask "ghostty"
+
+# ── Apps ───────────────────────────────────────────────────────────────────────
+cask "1password"
+cask "1password-cli"
+cask "atomicjar/tap/testcontainers-desktop"
+cask "claude-code"
+cask "daisydisk"
+cask "firefox"
 cask "hammerspoon"
+cask "keepingyouawake"
 cask "orbstack"
 cask "postman"
 cask "slack"
 cask "tana"
-cask "atomicjar/tap/testcontainers-desktop"
 cask "thaw"
-cask "warp"
-cask "daisydisk"
-cask "firefox"
-cask "keepingyouawake"
 cask "zoom"
-cask "visual-studio-code"
-tap "grafana/grafana"
-brew "grafana/grafana/gcx"
-brew "helm"
