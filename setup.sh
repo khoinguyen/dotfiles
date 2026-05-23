@@ -87,6 +87,33 @@ else
 fi
 
 # ─────────────────────────────────────────────
+section "SSH host config (1Password)"
+# ─────────────────────────────────────────────
+
+# Host blocks are not committed (public repo). They live as 1Password
+# documents and are fetched into ~/.ssh/config.d/. 1Password is the source
+# of truth — local edits are overwritten on re-run.
+if command -v op &>/dev/null && op account list &>/dev/null 2>&1; then
+  mkdir -p ~/.ssh/config.d && chmod 700 ~/.ssh/config.d
+  log "Fetching SSH host configs from 1Password..."
+  for doc in ssh-config-personal ssh-config-ampup; do
+    out=~/.ssh/config.d/"${doc#ssh-config-}".conf
+    if op document get "$doc" --account my.1password.com --out-file "$out" --force &>/dev/null; then
+      success "${doc#ssh-config-}.conf"
+    else
+      warn "Could not fetch $doc (skipping)"
+    fi
+  done
+  # Ensure the base config includes config.d (idempotent).
+  if [[ ! -f ~/.ssh/config ]] || ! grep -qF 'Include ~/.ssh/config.d/*.conf' ~/.ssh/config; then
+    echo 'Include ~/.ssh/config.d/*.conf' >> ~/.ssh/config
+    chmod 600 ~/.ssh/config
+  fi
+else
+  warn "1Password CLI not available/signed in — skipping SSH host config"
+fi
+
+# ─────────────────────────────────────────────
 section "Remote Login (sshd)"
 # ─────────────────────────────────────────────
 
