@@ -68,6 +68,19 @@ else
 fi
 
 # ─────────────────────────────────────────────
+section "Remote Login (sshd)"
+# ─────────────────────────────────────────────
+
+if sudo launchctl print system/com.openssh.sshd 2>/dev/null | grep -q "state = running"; then
+  success "sshd already running"
+else
+  log "Enabling Remote Login (sshd)..."
+  sudo launchctl enable system/com.openssh.sshd
+  sudo launchctl start com.openssh.sshd
+  success "sshd enabled"
+fi
+
+# ─────────────────────────────────────────────
 section "Dotfiles (tuckr)"
 # ─────────────────────────────────────────────
 
