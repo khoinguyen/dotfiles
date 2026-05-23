@@ -71,12 +71,11 @@ fi
 section "Remote Login (sshd)"
 # ─────────────────────────────────────────────
 
-if sudo launchctl print system/com.openssh.sshd 2>/dev/null | grep -q "state = running"; then
-  success "sshd already running"
+if sudo systemsetup -getremotelogin 2>/dev/null | grep -q "On"; then
+  success "sshd already enabled"
 else
   log "Enabling Remote Login (sshd)..."
-  sudo launchctl enable system/com.openssh.sshd
-  sudo launchctl start com.openssh.sshd
+  sudo systemsetup -setremotelogin on
   success "sshd enabled"
 fi
 

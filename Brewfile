@@ -76,7 +76,7 @@ cask "firefox"
 cask "hammerspoon"
 cask "keepingyouawake"
 cask "lulu"                # network firewall
-cask "tailscale"
+cask "tailscale-app"
 cask "orbstack"
 cask "postman"
 cask "slack"
