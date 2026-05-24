@@ -1,2 +1,2 @@
 setopt autocd
-setopt correctall
+unsetopt correct correctall
