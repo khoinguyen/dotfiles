@@ -20,6 +20,7 @@ cd ~/.dotfiles
    (dedupes; skips with a warning if offline)
 5. **Remote Login (sshd)** — enables it via `systemsetup -setremotelogin on`
 6. **Dotfiles** — `tuckr add \* --force` to symlink everything
+7. **LaunchAgents** — bootstraps user agents (e.g. `com.khoi.gemini-allow`)
 
 ## Dotfile management (tuckr)
 
@@ -61,6 +62,23 @@ ssh khoinguyen@khoi-mbp
 The Mac's Tailscale IP/hostname is stable per device. `setup.sh` enables sshd
 and trusts your keys, so a freshly bootstrapped machine is reachable
 immediately after setup.
+
+## Gemini API key allowlist
+
+`~/.local/bin/gemini-allow` updates the IP allowlist on the "Khoi Local Dev"
+Gemini API key to the current public IP(s). The key is restricted to specific
+source IPs that go stale on every network change.
+
+A launchd agent (`com.khoi.gemini-allow`) watches `/private/var/run/resolv.conf`
+and runs the script automatically on every network change. Logs go to
+`~/Library/Logs/gemini-allow.log`. Going offline is handled gracefully — the
+script exits early if no public IP is reachable.
+
+Run manually any time:
+
+```bash
+gemini-allow
+```
 
 ## Scripts
 
