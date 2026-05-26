@@ -139,5 +139,26 @@ else
 fi
 
 # ─────────────────────────────────────────────
+section "LaunchAgents"
+# ─────────────────────────────────────────────
+
+LAUNCH_AGENTS=(
+  com.khoi.gemini-allow
+)
+
+for agent in "${LAUNCH_AGENTS[@]}"; do
+  plist="$HOME/Library/LaunchAgents/${agent}.plist"
+  if launchctl print "gui/$(id -u)/${agent}" &>/dev/null 2>&1; then
+    success "${agent} already loaded"
+  elif [[ -f "$plist" ]]; then
+    log "Loading ${agent}..."
+    launchctl bootstrap "gui/$(id -u)" "$plist"
+    success "${agent} loaded"
+  else
+    warn "${agent}.plist not found (skipping)"
+  fi
+done
+
+# ─────────────────────────────────────────────
 echo
 echo "✔ Setup complete. Restart your shell (or logout) for all changes to take effect."

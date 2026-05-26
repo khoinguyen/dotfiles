@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.khoi.gemini-allow</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/zsh</string>
+        <string>/Users/khoinguyen/.local/bin/gemini-allow</string>
+    </array>
+    <key>WatchPaths</key>
+    <array>
+        <string>/private/var/run/resolv.conf</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/Users/khoinguyen/Library/Logs/gemini-allow.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/khoinguyen/Library/Logs/gemini-allow.log</string>
+</dict>
+</plist>

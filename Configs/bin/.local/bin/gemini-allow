@@ -1,0 +1,39 @@
+#!/bin/zsh
+# Standalone script version of the gemini-allow zsh function, for use by launchd.
+# The interactive-shell function lives in .zshrc.d/gemini-allow.sh.
+export PATH="/opt/homebrew/bin:/usr/bin:/bin"
+
+key="${GEMINI_KEY_ID:-288dbbeb-5327-4e76-a9ac-5cfc02b5bff4}"
+project="${GEMINI_KEY_PROJECT:-ampup-network}"
+
+ip4=$(curl -fsS4 --max-time 5 https://api.ipify.org 2>/dev/null)
+ip6=$(curl -fsS6 --max-time 5 https://api6.ipify.org 2>/dev/null)
+
+local -a ips
+[[ -n "$ip4" ]] && ips+=("$ip4")
+[[ -n "$ip6" ]] && ips+=("$ip6")
+if (( ${#ips} == 0 )); then
+  print -u2 "gemini-allow: could not detect any public IP"
+  exit 1
+fi
+
+targets_csv=$(gcloud services api-keys describe "$key" --project="$project" \
+  --format='value[separator=","](restrictions.apiTargets[].service)' 2>/dev/null)
+if [[ $? -ne 0 ]]; then
+  print -u2 "gemini-allow: could not describe key $key in $project"
+  exit 1
+fi
+
+local -a target_flags
+for svc in ${(s:,:)targets_csv}; do
+  [[ -n "$svc" ]] && target_flags+=("--api-target=service=$svc")
+done
+
+ip_list="${(j:,:)ips}"
+if gcloud services api-keys update "$key" --project="$project" \
+    "${target_flags[@]}" --allowed-ips="$ip_list" --quiet >/dev/null 2>&1; then
+  print "gemini-allow: $key allowed-ips -> $ip_list"
+else
+  print -u2 "gemini-allow: failed to update key $key"
+  exit 1
+fi
