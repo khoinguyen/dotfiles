@@ -90,3 +90,4 @@ cask "zoom"
 # ── Mac App Store ──────────────────────────────────────────────────────────────
 mas "Pine Player", id: 1112075769
 mas "The Unarchiver", id: 425424353
+brew "direnv"

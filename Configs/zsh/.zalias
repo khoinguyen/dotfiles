@@ -101,7 +101,13 @@ function gpm() {
   gh pr merge
 }
 function git_approve_pr() {
-  GH_TOKEN="$BOT_GH_PAT" gh pr review $PR --approve --body "#self-approved"
+  local pr="${PR:-}"
+  if GH_TOKEN="$BOT_GH_PAT" gh pr review ${pr:+"$pr"} --approve --body "#self-approved"; then
+    echo "git_approve_pr: approved PR${pr:+ #$pr}"
+  else
+    echo "git_approve_pr: failed to approve PR${pr:+ #$pr}" >&2
+    return 1
+  fi
 }
 function gpma() {
   gpm
