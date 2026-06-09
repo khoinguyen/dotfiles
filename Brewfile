@@ -2,11 +2,9 @@
 tap "atlassian/acli"
 tap "atomicjar/tap"
 tap "confluentinc/tap"
-tap "felixkratz/formulae"
 tap "fluxcd/tap"
 tap "grafana/grafana"
-tap "kubeshop/botkube"
-tap "nikitabobko/tap"
+tap "aprilnea/tap"
 
 # ── Shell & Terminal ───────────────────────────────────────────────────────────
 brew "antidote"            # zsh plugin manager
@@ -44,6 +42,7 @@ brew "watch"
 brew "yazi"                # terminal file manager
 brew "yq"                  # YAML/JSON processor
 brew "zstd"                # compression
+brew "direnv"
 
 # ── Kubernetes & Cloud ─────────────────────────────────────────────────────────
 brew "awscli"
@@ -60,7 +59,6 @@ brew "wireguard-tools"
 brew "atlassian/acli/acli"
 brew "confluentinc/tap/cli"
 brew "grafana/grafana/gcx"
-brew "kubeshop/botkube/botkube"
 
 # ── Fonts ──────────────────────────────────────────────────────────────────────
 cask "font-fira-code-nerd-font"
@@ -86,8 +84,9 @@ cask "tana"
 cask "thaw"
 cask "vivaldi"
 cask "zoom"
-
+cask "aprilnea/tap/openlogi@latest"
+cask "bettershot"
+#
 # ── Mac App Store ──────────────────────────────────────────────────────────────
 mas "Pine Player", id: 1112075769
 mas "The Unarchiver", id: 425424353
-brew "direnv"
