@@ -16,9 +16,11 @@ brew "zoxide"              # smart cd
 cask "ghostty"
 cask "warp"
 
-# ── Editors ────────────────────────────────────────────────────────────────────
+# ── Editors & IDEs ─────────────────────────────────────────────────────────────
 brew "neovim"
 brew "tree-sitter"
+cask "cursor"
+cask "datagrip"
 cask "visual-studio-code"
 
 # ── CLI Utilities ──────────────────────────────────────────────────────────────
@@ -43,6 +45,7 @@ brew "yazi"                # terminal file manager
 brew "yq"                  # YAML/JSON processor
 brew "zstd"                # compression
 brew "direnv"
+brew "go"                   # Go language runtime
 
 # ── Kubernetes & Cloud ─────────────────────────────────────────────────────────
 brew "awscli"
@@ -59,34 +62,78 @@ brew "wireguard-tools"
 brew "atlassian/acli/acli"
 brew "confluentinc/tap/cli"
 brew "grafana/grafana/gcx"
+cask "lens"                # Kubernetes GUI
+cask "tableau"             # data visualization
+cask "zui"                 # network packet analysis (successor to Brim)
 
 # ── Fonts ──────────────────────────────────────────────────────────────────────
 cask "font-fira-code-nerd-font"
 cask "font-hack-nerd-font"
 cask "font-meslo-lg-nerd-font"
 
-# ── Apps ───────────────────────────────────────────────────────────────────────
+# ── Browsers ───────────────────────────────────────────────────────────────────
+cask "brave-browser"
+cask "firefox"
+cask "google-chrome"
+cask "google-drive"
+cask "vivaldi"
+
+# ── Communication ──────────────────────────────────────────────────────────────
+cask "discord"
+cask "loom"
+cask "slack"
+cask "telegram"
+cask "zalo"
+cask "zoom"
+
+# ── Security & Privacy ─────────────────────────────────────────────────────────
 cask "1password"
 cask "1password-cli"
-cask "atomicjar/tap/testcontainers-desktop"
-cask "claude-code"
-cask "daisydisk"
-cask "firefox"
-cask "hammerspoon"
-cask "keepingyouawake"
 cask "lulu"                # network firewall
+cask "proton-mail"
+cask "protonvpn"
+
+# ── AI ─────────────────────────────────────────────────────────────────────────
+cask "chatgpt"
+cask "claude-code"
+
+# ── Productivity ───────────────────────────────────────────────────────────────
 cask "obsidian"
-cask "tailscale-app"
+cask "raycast"
+cask "tana"
+cask "zotero"
+cask "wpsoffice"
+
+# ── Utilities ──────────────────────────────────────────────────────────────────
+cask "adobe-digital-editions"
+cask "android-file-transfer"
+cask "antigravity"
+cask "aprilnea/tap/openlogi@latest"
+cask "atomicjar/tap/testcontainers-desktop"
+cask "bettershot"
+cask "daisydisk"
+cask "hammerspoon"
+cask "httpie-desktop"
+cask "karabiner-elements"
+cask "keepingyouawake"
+cask "keymapp"             # ZSA keyboard configurator
 cask "orbstack"
 cask "postman"
-cask "slack"
-cask "tana"
+cask "raspberry-pi-imager"
+cask "rippling"
+cask "tailscale-app"
 cask "thaw"
-cask "vivaldi"
-cask "zoom"
-cask "aprilnea/tap/openlogi@latest"
-cask "bettershot"
-#
+cask "wireshark"
+
+# ── Media ──────────────────────────────────────────────────────────────────────
+cask "audacity"
+cask "handbrake"
+
+# ── Games ──────────────────────────────────────────────────────────────────────
+cask "godot"
+cask "steam"
+cask "whisky"              # Wine wrapper for macOS
+
 # ── Mac App Store ──────────────────────────────────────────────────────────────
 mas "Pine Player", id: 1112075769
 mas "The Unarchiver", id: 425424353
