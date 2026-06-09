@@ -45,7 +45,6 @@ brew "yazi"                # terminal file manager
 brew "yq"                  # YAML/JSON processor
 brew "zstd"                # compression
 brew "direnv"
-brew "go"                   # Go language runtime
 
 # ── Kubernetes & Cloud ─────────────────────────────────────────────────────────
 brew "awscli"
