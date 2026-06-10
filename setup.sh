@@ -42,27 +42,6 @@ else
 fi
 
 # ─────────────────────────────────────────────
-echo
-echo "┌─────────────────────────────────────────────┐"
-echo "│           Action required: 1Password         │"
-echo "├─────────────────────────────────────────────┤"
-echo "│                                             │"
-echo "│  1. Open 1Password and sign in              │"
-echo "│  2. Settings → Developer → Enable CLI       │"
-echo "│  3. Settings → Developer → SSH Agent →      │"
-echo "│       enable + Use key names                │"
-echo "│  4. Run: op account add  (if not signed in) │"
-echo "│  5. Run: eval \$(op signin)                  │"
-echo "│                                             │"
-echo "│       Then come back here and press         │"
-echo "│              SPACE to continue              │"
-echo "│                                             │"
-echo "└─────────────────────────────────────────────┘"
-echo
-read -r -s -d ' ' -p "" _
-echo
-
-# ─────────────────────────────────────────────
 section "macOS defaults"
 # ─────────────────────────────────────────────
 
@@ -120,48 +99,6 @@ else
 fi
 
 # ─────────────────────────────────────────────
-section "SSH host config (1Password)"
-# ─────────────────────────────────────────────
-
-# Host blocks are not committed (public repo). They live as 1Password
-# documents and are fetched into ~/.ssh/config.d/. 1Password is the source
-# of truth — local edits are overwritten on re-run.
-if command -v op &>/dev/null && op account list &>/dev/null 2>&1; then
-  mkdir -p ~/.ssh/config.d && chmod 700 ~/.ssh/config.d
-
-  log "Fetching SSH public keys from 1Password..."
-  for pair in "khoi-ed25519:khoi-ed25519.pub" "id_khoinguyen:id_khoinguyen@github.pub"; do
-    item="${pair%%:*}"
-    pubkey_file=~/.ssh/"${pair##*:}"
-    if pubkey=$(op item get "$item" --account my.1password.com --fields label="public key" 2>/dev/null); then
-      echo "$pubkey" > "$pubkey_file"
-      chmod 644 "$pubkey_file"
-      success "${pair##*:}"
-    else
-      warn "Could not fetch public key for $item (skipping)"
-    fi
-  done
-
-  log "Fetching SSH host configs from 1Password..."
-  for doc in ssh-config-personal ssh-config-ampup; do
-    out=~/.ssh/config.d/"${doc#ssh-config-}".conf
-    if op document get "$doc" --account my.1password.com --out-file "$out" --force &>/dev/null; then
-      success "${doc#ssh-config-}.conf"
-    else
-      warn "Could not fetch $doc (skipping)"
-    fi
-  done
-
-  # Ensure the base config includes config.d (idempotent).
-  if [[ ! -f ~/.ssh/config ]] || ! grep -qF 'Include ~/.ssh/config.d/*.conf' ~/.ssh/config; then
-    echo 'Include ~/.ssh/config.d/*.conf' >> ~/.ssh/config
-    chmod 600 ~/.ssh/config
-  fi
-else
-  warn "1Password CLI not available/signed in — skipping SSH host config"
-fi
-
-# ─────────────────────────────────────────────
 section "Remote Login (sshd)"
 # ─────────────────────────────────────────────
 
@@ -211,6 +148,69 @@ for agent in "${LAUNCH_AGENTS[@]}"; do
     warn "${agent}.plist not found (skipping)"
   fi
 done
+
+# ─────────────────────────────────────────────
+echo
+echo "┌─────────────────────────────────────────────┐"
+echo "│           Action required: 1Password         │"
+echo "├─────────────────────────────────────────────┤"
+echo "│                                             │"
+echo "│  1. Open 1Password and sign in              │"
+echo "│  2. Settings → Developer → Enable CLI       │"
+echo "│  3. Settings → Developer → SSH Agent →      │"
+echo "│       enable + Use key names                │"
+echo "│  4. Run: op account add  (if not signed in) │"
+echo "│  5. Run: eval \$(op signin)                  │"
+echo "│                                             │"
+echo "│       Then come back here and press         │"
+echo "│              SPACE to continue              │"
+echo "│                                             │"
+echo "└─────────────────────────────────────────────┘"
+echo
+read -r -s -d ' ' -p "" _
+echo
+
+# ─────────────────────────────────────────────
+section "SSH keys + host config (1Password)"
+# ─────────────────────────────────────────────
+
+# Host blocks are not committed (public repo). They live as 1Password
+# documents and are fetched into ~/.ssh/config.d/. 1Password is the source
+# of truth — local edits are overwritten on re-run.
+if command -v op &>/dev/null && op account list &>/dev/null 2>&1; then
+  mkdir -p ~/.ssh/config.d && chmod 700 ~/.ssh/config.d
+
+  log "Fetching SSH public keys from 1Password..."
+  for pair in "khoi-ed25519:khoi-ed25519.pub" "id_khoinguyen:id_khoinguyen@github.pub"; do
+    item="${pair%%:*}"
+    pubkey_file=~/.ssh/"${pair##*:}"
+    if pubkey=$(op item get "$item" --account my.1password.com --fields label="public key" 2>/dev/null); then
+      echo "$pubkey" > "$pubkey_file"
+      chmod 644 "$pubkey_file"
+      success "${pair##*:}"
+    else
+      warn "Could not fetch public key for $item (skipping)"
+    fi
+  done
+
+  log "Fetching SSH host configs from 1Password..."
+  for doc in ssh-config-personal ssh-config-ampup; do
+    out=~/.ssh/config.d/"${doc#ssh-config-}".conf
+    if op document get "$doc" --account my.1password.com --out-file "$out" --force &>/dev/null; then
+      success "${doc#ssh-config-}.conf"
+    else
+      warn "Could not fetch $doc (skipping)"
+    fi
+  done
+
+  # Ensure the base config includes config.d (idempotent).
+  if [[ ! -f ~/.ssh/config ]] || ! grep -qF 'Include ~/.ssh/config.d/*.conf' ~/.ssh/config; then
+    echo 'Include ~/.ssh/config.d/*.conf' >> ~/.ssh/config
+    chmod 600 ~/.ssh/config
+  fi
+else
+  warn "1Password CLI not available/signed in — skipping SSH keys and host config"
+fi
 
 # ─────────────────────────────────────────────
 echo
