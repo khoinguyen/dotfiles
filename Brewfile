@@ -113,7 +113,6 @@ cask "atomicjar/tap/testcontainers-desktop"
 cask "bettershot"
 cask "daisydisk"
 cask "hammerspoon"
-cask "httpie-desktop"
 cask "karabiner-elements"
 cask "keepingyouawake"
 cask "keymapp"             # ZSA keyboard configurator
