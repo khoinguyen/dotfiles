@@ -58,14 +58,6 @@ defaults write NSGlobalDomain AppleScrollerPagingBehavior -bool true
 success "macOS defaults applied (logout may be required)"
 
 # ─────────────────────────────────────────────
-section "Git"
-# ─────────────────────────────────────────────
-
-git config --global user.name  "Khoi Nguyen"
-git config --global user.email "khoi.nqq@gmail.com"
-success "Git user configured"
-
-# ─────────────────────────────────────────────
 section "Touch ID for sudo"
 # ─────────────────────────────────────────────
 
@@ -171,12 +163,12 @@ read -r -s -d ' ' -p "" _
 echo
 
 # ─────────────────────────────────────────────
-section "SSH keys + host config (1Password)"
+section "SSH keys, host config + git config (1Password)"
 # ─────────────────────────────────────────────
 
-# Host blocks are not committed (public repo). They live as 1Password
-# documents and are fetched into ~/.ssh/config.d/. 1Password is the source
-# of truth — local edits are overwritten on re-run.
+# Sensitive configs are not committed (public repo). They live as 1Password
+# documents and are fetched here. 1Password is the source of truth —
+# local edits are overwritten on re-run.
 if command -v op &>/dev/null && op account list &>/dev/null 2>&1; then
   mkdir -p ~/.ssh/config.d && chmod 700 ~/.ssh/config.d
 
@@ -208,8 +200,18 @@ if command -v op &>/dev/null && op account list &>/dev/null 2>&1; then
     echo 'Include ~/.ssh/config.d/*.conf' >> ~/.ssh/config
     chmod 600 ~/.ssh/config
   fi
+
+  log "Fetching git configs from 1Password..."
+  for doc in gitconfig gitconfig-ampup; do
+    out=~/".$doc"
+    if op document get "$doc" --account my.1password.com --out-file "$out" --force &>/dev/null; then
+      success "$out"
+    else
+      warn "Could not fetch $doc (skipping)"
+    fi
+  done
 else
-  warn "1Password CLI not available/signed in — skipping SSH keys and host config"
+  warn "1Password CLI not available/signed in — skipping SSH keys, host config and git config"
 fi
 
 # ─────────────────────────────────────────────
