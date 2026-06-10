@@ -32,7 +32,6 @@
                     },
                     {
                         "description": "Cmd+Tab → F19",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
@@ -46,7 +45,6 @@
                     },
                     {
                         "description": "Cmd+Shift+Tab → F20 (reverse)",
-                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {
