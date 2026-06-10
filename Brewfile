@@ -121,11 +121,11 @@ cask "raspberry-pi-imager"
 cask "rippling"
 cask "tailscale-app"
 cask "thaw"
-cask "wireshark"
+cask "wireshark-app"
 
 # ── Media ──────────────────────────────────────────────────────────────────────
 cask "audacity"
-cask "handbrake"
+cask "handbrake-app"
 
 # ── Games ──────────────────────────────────────────────────────────────────────
 cask "godot"
