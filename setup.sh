@@ -210,6 +210,15 @@ if command -v op &>/dev/null && op account list &>/dev/null 2>&1; then
       warn "Could not fetch $doc (skipping)"
     fi
   done
+
+  log "Fetching AWS config from 1Password..."
+  mkdir -p ~/.aws && chmod 700 ~/.aws
+  if op document get "aws-config" --account my.1password.com --out-file ~/.aws/config --force &>/dev/null; then
+    chmod 600 ~/.aws/config
+    success "~/.aws/config"
+  else
+    warn "Could not fetch aws-config (skipping)"
+  fi
 else
   warn "1Password CLI not available/signed in — skipping SSH keys, host config and git config"
 fi
