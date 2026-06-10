@@ -133,5 +133,6 @@ cask "steam"
 cask "whisky"              # Wine wrapper for macOS
 
 # ── Mac App Store ──────────────────────────────────────────────────────────────
+mas "1Password for Safari", id: 1569813296
 mas "Pine Player", id: 1112075769
 mas "The Unarchiver", id: 425424353
