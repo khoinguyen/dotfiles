@@ -105,7 +105,6 @@ cask "zotero"
 cask "wpsoffice"
 
 # ── Utilities ──────────────────────────────────────────────────────────────────
-cask "adobe-digital-editions"
 cask "android-file-transfer"
 cask "antigravity"
 cask "aprilnea/tap/openlogi@latest"
