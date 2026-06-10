@@ -1,0 +1,20 @@
+schema_version = 1
+
+[app_settings]
+launch_at_login = true
+check_for_updates = false
+update_prompt_seen = true
+show_in_menu_bar = true
+thumbwheel_sensitivity = 14
+
+[devices.0b034]
+dpi_presets = [
+    2800,
+    1500,
+    3200,
+]
+
+[devices.0b034.lighting]
+enabled = true
+color = "ff3b30"
+brightness = 100
