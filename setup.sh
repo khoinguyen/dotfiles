@@ -58,6 +58,14 @@ defaults write NSGlobalDomain AppleScrollerPagingBehavior -bool true
 success "macOS defaults applied (logout may be required)"
 
 # ─────────────────────────────────────────────
+section "Git"
+# ─────────────────────────────────────────────
+
+git config --global user.name  "Khoi Nguyen"
+git config --global user.email "khoi.nqq@gmail.com"
+success "Git user configured"
+
+# ─────────────────────────────────────────────
 section "Touch ID for sudo"
 # ─────────────────────────────────────────────
 
