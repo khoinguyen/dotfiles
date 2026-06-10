@@ -42,6 +42,27 @@ else
 fi
 
 # ─────────────────────────────────────────────
+echo
+echo "┌─────────────────────────────────────────────┐"
+echo "│           Action required: 1Password         │"
+echo "├─────────────────────────────────────────────┤"
+echo "│                                             │"
+echo "│  1. Open 1Password and sign in              │"
+echo "│  2. Settings → Developer → Enable CLI       │"
+echo "│  3. Settings → Developer → SSH Agent →      │"
+echo "│       enable + Use key names                │"
+echo "│  4. Run: op account add  (if not signed in) │"
+echo "│  5. Run: eval \$(op signin)                  │"
+echo "│                                             │"
+echo "│       Then come back here and press         │"
+echo "│              SPACE to continue              │"
+echo "│                                             │"
+echo "└─────────────────────────────────────────────┘"
+echo
+read -r -s -d ' ' -p "" _
+echo
+
+# ─────────────────────────────────────────────
 section "macOS defaults"
 # ─────────────────────────────────────────────
 
