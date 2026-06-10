@@ -99,6 +99,20 @@ section "SSH host config (1Password)"
 # of truth — local edits are overwritten on re-run.
 if command -v op &>/dev/null && op account list &>/dev/null 2>&1; then
   mkdir -p ~/.ssh/config.d && chmod 700 ~/.ssh/config.d
+
+  log "Fetching SSH public keys from 1Password..."
+  for pair in "khoi-ed25519:khoi-ed25519.pub" "id_khoinguyen:id_khoinguyen@github.pub"; do
+    item="${pair%%:*}"
+    pubkey_file=~/.ssh/"${pair##*:}"
+    if pubkey=$(op item get "$item" --account my.1password.com --fields label="public key" 2>/dev/null); then
+      echo "$pubkey" > "$pubkey_file"
+      chmod 644 "$pubkey_file"
+      success "${pair##*:}"
+    else
+      warn "Could not fetch public key for $item (skipping)"
+    fi
+  done
+
   log "Fetching SSH host configs from 1Password..."
   for doc in ssh-config-personal ssh-config-ampup; do
     out=~/.ssh/config.d/"${doc#ssh-config-}".conf
@@ -108,6 +122,7 @@ if command -v op &>/dev/null && op account list &>/dev/null 2>&1; then
       warn "Could not fetch $doc (skipping)"
     fi
   done
+
   # Ensure the base config includes config.d (idempotent).
   if [[ ! -f ~/.ssh/config ]] || ! grep -qF 'Include ~/.ssh/config.d/*.conf' ~/.ssh/config; then
     echo 'Include ~/.ssh/config.d/*.conf' >> ~/.ssh/config
