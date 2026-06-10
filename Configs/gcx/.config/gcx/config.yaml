@@ -1,0 +1,16 @@
+contexts:
+  default: {}
+  prod-readonly:
+    grafana:
+      server: https://ampup.grafana.net
+      proxy-endpoint: https://assistant-prod-us-west-0.grafana.net/assistant
+      oauth-token: ""
+      oauth-refresh-token: ""
+      oauth-token-expires-at: ""
+      oauth-refresh-expires-at: ""
+      auth-method: oauth
+    cloud:
+      stack: ampup
+    datasources:
+      loki: grafanacloud-logs
+current-context: prod-readonly
