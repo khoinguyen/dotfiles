@@ -48,6 +48,10 @@ section "macOS defaults"
 log "Disabling press-and-hold (enable key repeat)..."
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
+log "Setting key repeat rate (fast)..."
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
+
 log "Setting scrollbar click to jump to position..."
 defaults write NSGlobalDomain AppleScrollerPagingBehavior -bool true
 
@@ -130,8 +134,13 @@ section "Dotfiles (tuckr)"
 # ─────────────────────────────────────────────
 
 if command -v tuckr &>/dev/null; then
+  # tuckr expects dotfiles at ~/.dotfiles; create a symlink if the repo lives elsewhere.
+  if [[ ! -e "$HOME/.dotfiles" ]]; then
+    ln -s "$DOTFILES_DIR" "$HOME/.dotfiles"
+    log "Linked ~/.dotfiles -> $DOTFILES_DIR"
+  fi
   log "Symlinking dotfiles with tuckr..."
-  tuckr add \* --force
+  tuckr add \* --force --assume-yes --only-files
   success "Dotfiles linked"
 else
   log "tuckr not found — install it first or add to Brewfile"
