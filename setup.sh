@@ -121,6 +121,18 @@ else
 fi
 
 # ─────────────────────────────────────────────
+section "mise (runtime versions)"
+# ─────────────────────────────────────────────
+
+if command -v mise &>/dev/null; then
+  log "Installing mise-managed runtimes..."
+  mise install
+  success "mise runtimes installed"
+else
+  warn "mise not found — skipping runtime installs"
+fi
+
+# ─────────────────────────────────────────────
 section "LaunchAgents"
 # ─────────────────────────────────────────────
 
