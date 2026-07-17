@@ -1,2 +1,9 @@
 **/.DS_Store
 .DS_Store
+
+# runtime lock files, not config
+**/*.lock
+!scripts/uv.lock
+
+# Karabiner's own periodic backups — redundant with git history
+Configs/karabiner/.config/karabiner/automatic_backups/
