@@ -138,6 +138,7 @@ section "LaunchAgents"
 
 LAUNCH_AGENTS=(
   #com.khoi.gemini-allow
+  com.khoi.brew-upgrade-remind
 )
 
 for agent in "${LAUNCH_AGENTS[@]}"; do

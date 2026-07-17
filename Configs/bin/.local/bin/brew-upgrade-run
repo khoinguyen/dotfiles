@@ -1,0 +1,19 @@
+#!/bin/zsh
+# Runs in a Ghostty window opened daily by launchd (com.khoi.brew-upgrade-remind),
+# so Touch ID prompts (sudo, ssh-agent unlock) surface normally.
+export PATH="/opt/homebrew/bin:/usr/bin:/bin"
+
+# OSC 9: Ghostty desktop notification. Clicking it focuses this window.
+printf '\e]9;%s\e\\' "Running brew bundle --upgrade"
+
+brew bundle --upgrade --file="$HOME/dotfiles/Brewfile"
+status=$?
+
+echo
+if (( status == 0 )); then
+  echo "brew bundle --upgrade: done."
+  printf '\e]9;%s\e\\' "brew bundle --upgrade: done"
+else
+  echo "brew bundle --upgrade: failed (exit $status)."
+  printf '\e]9;%s\e\\' "brew bundle --upgrade: failed (exit $status)"
+fi
