@@ -105,6 +105,9 @@ function git_approve_pr() {
   local repo="" num="" label=""
   if [[ -z "$arg" ]]; then
     label="current branch"
+  elif [[ "$arg" == http*://* ]]; then
+    num="$arg"
+    label="$arg"
   elif [[ "$arg" == */*#* ]]; then
     repo="${arg%%#*}"
     num="${arg##*#}"
