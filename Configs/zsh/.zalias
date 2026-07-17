@@ -101,11 +101,26 @@ function gpm() {
   gh pr merge
 }
 function git_approve_pr() {
-  local pr="${PR:-}"
-  if GH_TOKEN="$BOT_GH_PAT" gh pr review ${pr:+"$pr"} --approve --body "#self-approved"; then
-    echo "git_approve_pr: approved PR${pr:+ #$pr}"
+  local arg="$1"
+  local repo="" num="" label=""
+  if [[ -z "$arg" ]]; then
+    label="current branch"
+  elif [[ "$arg" == */*#* ]]; then
+    repo="${arg%%#*}"
+    num="${arg##*#}"
+    label="#$num on $repo"
   else
-    echo "git_approve_pr: failed to approve PR${pr:+ #$pr}" >&2
+    num="$arg"
+    label="#$num"
+  fi
+
+  local -a repo_flag
+  [[ -n "$repo" ]] && repo_flag=(-R "$repo")
+
+  if GH_TOKEN="$BOT_GH_PAT" gh pr review "${repo_flag[@]}" ${num:+"$num"} --approve --body "#self-approved"; then
+    echo "git_approve_pr: approved PR ($label)"
+  else
+    echo "git_approve_pr: failed to approve PR ($label)" >&2
     return 1
   fi
 }
