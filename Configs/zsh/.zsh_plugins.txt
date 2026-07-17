@@ -1,8 +1,8 @@
 rupa/z
-zsh-users/zsh-syntax-highlighting
-zsh-users/zsh-completions
-zsh-users/zsh-history-substring-search
-joshskidmore/zsh-fzf-history-search
-zsh-users/zsh-autosuggestions
+zdharma-continuum/fast-syntax-highlighting kind:defer
+zsh-users/zsh-autosuggestions kind:defer
+#zsh-users/zsh-history-substring-search kind:defer
+#joshskidmore/zsh-fzf-history-search
+#zsh-users/zsh-autosuggestions
 atuinsh/atuin
 jeffreytse/zsh-vi-mode

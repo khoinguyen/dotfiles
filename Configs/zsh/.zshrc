@@ -1,25 +1,19 @@
 bindkey -v
 eval "$(/opt/homebrew/bin/brew shellenv)"
 # unsetopt correctall
-# Load antidote: https://getantidote.github.io/
-# Set the root name of the plugins files (.txt and .zsh) antidote will use.
-zsh_plugins=${ZDOTDIR:-~}/.zsh_plugins
 
-# Ensure the .zsh_plugins.txt file exists so you can add plugins.
-[[ -f ${zsh_plugins}.txt ]] || touch ${zsh_plugins}.txt
-
-# Lazy-load antidote from its functions directory.
-fpath=(source $(brew --prefix)/opt/antidote/share/antidote/functions $fpath)
-autoload -Uz antidote
-
-# Generate a new static file whenever .zsh_plugins.txt is updated.
+# --- BEGIN antidote
+# .zshrc
+# Lazy-load antidote and generate the static load file only when needed
+zsh_plugins=${ZDOTDIR:-$HOME}/.zsh_plugins
 if [[ ! ${zsh_plugins}.zsh -nt ${zsh_plugins}.txt ]]; then
-  antidote bundle <${zsh_plugins}.txt >|${zsh_plugins}.zsh
+  (
+    source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
+    antidote bundle <${zsh_plugins}.txt >${zsh_plugins}.zsh
+  )
 fi
-
-# Source your static plugins file.
 source ${zsh_plugins}.zsh
-
+# --- END antidote
 export PATH="$HOME/.local/bin:$PATH"
 # export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 # export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
