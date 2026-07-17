@@ -4,7 +4,7 @@ tap "atomicjar/tap"
 tap "confluentinc/tap"
 tap "fluxcd/tap"
 tap "grafana/grafana"
-tap "aprilnea/tap"
+tap "socktainer/tap"
 
 # ── Shell & Terminal ───────────────────────────────────────────────────────────
 brew "antidote"            # zsh plugin manager
@@ -27,6 +27,7 @@ cask "visual-studio-code"
 brew "mas"                 # Mac App Store CLI
 brew "ast-grep"            # structural code search
 brew "bat"                 # cat with syntax highlighting
+brew "direnv"
 brew "eza"                 # ls replacement
 brew "fd"                  # find replacement
 brew "ffmpeg"
@@ -35,7 +36,9 @@ brew "git-delta"           # diff pager
 brew "jq"                  # JSON processor
 brew "just"                # command runner
 brew "mise"                # runtime version manager
+brew "navi"                # interactive cheatsheet
 brew "openssl@3"
+brew "pandoc"              # document converter
 brew "pet"                 # snippet manager
 brew "ripgrep"             # grep replacement
 brew "tldr"                # simplified man pages
@@ -44,17 +47,18 @@ brew "watch"
 brew "yazi"                # terminal file manager
 brew "yq"                  # YAML/JSON processor
 brew "zstd"                # compression
-brew "direnv"
 
 # ── Kubernetes & Cloud ─────────────────────────────────────────────────────────
 brew "awscli"
 cask "gcloud-cli"          # Google Cloud SDK
+cask "session-manager-plugin"
 brew "helm"
 brew "jira-cli"
 brew "kind"                # local k8s clusters
 brew "kubernetes-cli"      # kubectl
 brew "k9s"                 # k8s TUI
 brew "snowflake-cli"
+brew "socktainer/tap/socktainer"  # Docker-compatible API on Apple container
 brew "stern"               # k8s log tailing
 brew "trivy"               # vulnerability scanner
 brew "wireguard-tools"
@@ -72,6 +76,7 @@ cask "font-meslo-lg-nerd-font"
 
 # ── Browsers ───────────────────────────────────────────────────────────────────
 cask "brave-browser"
+cask "browseros"           # agentic browser
 cask "firefox"
 cask "google-chrome"
 cask "google-drive"
@@ -96,6 +101,7 @@ cask "protonvpn"
 cask "chatgpt"
 cask "claude"
 cask "claude-code"
+brew "herdr"                # terminal agent multiplexer
 
 # ── Productivity ───────────────────────────────────────────────────────────────
 cask "obsidian"
@@ -107,7 +113,6 @@ cask "wpsoffice"
 # ── Utilities ──────────────────────────────────────────────────────────────────
 cask "android-file-transfer"
 cask "antigravity"
-cask "aprilnea/tap/openlogi@latest"
 cask "atomicjar/tap/testcontainers-desktop"
 cask "bettershot"
 cask "daisydisk"
@@ -123,6 +128,11 @@ cask "tailscale-app"
 cask "thaw"
 cask "wireshark-app"
 
+# ── Documents ──────────────────────────────────────────────────────────────────
+cask "basictex"            # LaTeX distribution (pandoc PDF output)
+cask "sioyek"              # PDF viewer for papers/technical books
+brew "weasyprint"          # HTML to PDF
+
 # ── Media ──────────────────────────────────────────────────────────────────────
 cask "audacity"
 cask "handbrake-app"
@@ -130,7 +140,6 @@ cask "handbrake-app"
 # ── Games ──────────────────────────────────────────────────────────────────────
 cask "godot"
 cask "steam"
-cask "whisky"              # Wine wrapper for macOS
 
 # ── Mac App Store ──────────────────────────────────────────────────────────────
 mas "1Password for Safari", id: 1569813296
