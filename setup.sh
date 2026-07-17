@@ -137,7 +137,7 @@ section "LaunchAgents"
 # ─────────────────────────────────────────────
 
 LAUNCH_AGENTS=(
-  com.khoi.gemini-allow
+  #com.khoi.gemini-allow
 )
 
 for agent in "${LAUNCH_AGENTS[@]}"; do
