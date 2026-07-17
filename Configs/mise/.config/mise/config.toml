@@ -1,4 +1,8 @@
 [tools]
+argocd = "latest"
 gh = "latest"
 go = "latest"
+istioctl = "latest"
 node = "latest"
+sops = "latest"
+terraform = "1.8.0"
