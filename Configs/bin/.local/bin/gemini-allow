@@ -17,9 +17,41 @@ if (( ${#ips} == 0 )); then
   exit 1
 fi
 
+# gcloud user credentials periodically require interactive reauth (org policy on
+# sensitive APIs). launchd runs this unattended, so a stale session fails silently
+# unless we detect that specific error and open the browser SSO flow ourselves.
+# Only retried once per invocation, and only for reauth errors specifically, so a
+# real permission/network problem doesn't loop or pop a browser needlessly.
+_reauth_attempted=0
+_is_reauth_error() {
+  [[ "$1" == *"Reauthentication"* || "$1" == *"reauth"* || \
+     "$1" == *"cannot prompt during non-interactive execution"* ]]
+}
+_reauth_once_if_needed() {
+  if (( _reauth_attempted )) || ! _is_reauth_error "$1"; then
+    return 1
+  fi
+  _reauth_attempted=1
+  print -u2 "gemini-allow: gcloud session needs reauth — opening browser SSO login"
+  if gcloud auth login --quiet; then
+    print -u2 "gemini-allow: reauth succeeded, retrying"
+    return 0
+  fi
+  print -u2 "gemini-allow: reauth failed"
+  return 1
+}
+
+describe_err=$(mktemp)
 targets_csv=$(gcloud services api-keys describe "$key" --project="$project" \
-  --format='value[separator=","](restrictions.apiTargets[].service)' 2>/dev/null)
-if [[ $? -ne 0 ]]; then
+  --format='value[separator=","](restrictions.apiTargets[].service)' 2>"$describe_err")
+describe_status=$?
+if (( describe_status != 0 )) && _reauth_once_if_needed "$(<"$describe_err")"; then
+  targets_csv=$(gcloud services api-keys describe "$key" --project="$project" \
+    --format='value[separator=","](restrictions.apiTargets[].service)' 2>"$describe_err")
+  describe_status=$?
+fi
+rm -f "$describe_err"
+if (( describe_status != 0 )); then
   print -u2 "gemini-allow: could not describe key $key in $project"
   exit 1
 fi
@@ -30,8 +62,18 @@ for svc in ${(s:,:)targets_csv}; do
 done
 
 ip_list="${(j:,:)ips}"
+update_err=$(mktemp)
+update_status=1
 if gcloud services api-keys update "$key" --project="$project" \
-    "${target_flags[@]}" --allowed-ips="$ip_list" --quiet >/dev/null 2>&1; then
+    "${target_flags[@]}" --allowed-ips="$ip_list" --quiet >/dev/null 2>"$update_err"; then
+  update_status=0
+elif _reauth_once_if_needed "$(<"$update_err")" && gcloud services api-keys update "$key" \
+    --project="$project" "${target_flags[@]}" --allowed-ips="$ip_list" --quiet \
+    >/dev/null 2>"$update_err"; then
+  update_status=0
+fi
+rm -f "$update_err"
+if (( update_status == 0 )); then
   print "gemini-allow: $key allowed-ips -> $ip_list"
 else
   print -u2 "gemini-allow: failed to update key $key"
