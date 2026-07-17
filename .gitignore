@@ -7,3 +7,6 @@
 
 # Karabiner's own periodic backups — redundant with git history
 Configs/karabiner/.config/karabiner/automatic_backups/
+
+# company Grafana URL/org + oauth tokens — not for a public repo
+Configs/gcx/.config/gcx/config.yaml
