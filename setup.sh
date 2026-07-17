@@ -83,8 +83,8 @@ log "Fetching public keys from sshid.io..."
 if keys=$(curl -fs https://sshid.io/khoinguyen); then
   while IFS= read -r key; do
     [[ -z "$key" ]] && continue
-    grep -qF "$key" ~/.ssh/authorized_keys || echo "$key" >> ~/.ssh/authorized_keys
-  done <<< "$keys"
+    grep -qF "$key" ~/.ssh/authorized_keys || echo "$key" >>~/.ssh/authorized_keys
+  done <<<"$keys"
   success "SSH keys updated"
 else
   warn "Could not fetch keys from sshid.io (skipping)"
@@ -189,7 +189,7 @@ if command -v op &>/dev/null && op account list &>/dev/null 2>&1; then
     item="${pair%%:*}"
     pubkey_file=~/.ssh/"${pair##*:}"
     if pubkey=$(op item get "$item" --account my.1password.com --fields label="public key" 2>/dev/null); then
-      echo "$pubkey" > "$pubkey_file"
+      echo "$pubkey" >"$pubkey_file"
       chmod 644 "$pubkey_file"
       success "${pair##*:}"
     else
@@ -209,7 +209,7 @@ if command -v op &>/dev/null && op account list &>/dev/null 2>&1; then
 
   # Ensure the base config includes config.d (idempotent).
   if [[ ! -f ~/.ssh/config ]] || ! grep -qF 'Include ~/.ssh/config.d/*.conf' ~/.ssh/config; then
-    echo 'Include ~/.ssh/config.d/*.conf' >> ~/.ssh/config
+    echo 'Include ~/.ssh/config.d/*.conf' >>~/.ssh/config
     chmod 600 ~/.ssh/config
   fi
 
