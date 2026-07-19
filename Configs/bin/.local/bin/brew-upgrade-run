@@ -1,19 +1,44 @@
 #!/bin/zsh
 # Runs in a Ghostty window opened daily by launchd (com.khoi.brew-upgrade-remind),
 # so Touch ID prompts (sudo, ssh-agent unlock) surface normally.
-export PATH="/opt/homebrew/bin:/usr/bin:/bin"
+#
+# launchd's StartCalendarInterval can double-fire around sleep/wake, which
+# would otherwise open two Ghostty tabs both running the upgrade at once.
+# Guard with a non-blocking lock: the second invocation bails immediately
+# instead of racing brew. lockf holds the lock for as long as this process
+# (re-exec'd via --locked) is alive, so it covers the whole upgrade run.
+LOCKFILE="/tmp/.brew-upgrade-run.lock"
 
-# OSC 9: Ghostty desktop notification. Clicking it focuses this window.
-printf '\e]9;%s\e\\' "Running brew bundle --upgrade"
+if [[ "$1" == --locked ]]; then
+  shift
+  export PATH="/opt/homebrew/bin:/usr/bin:/bin"
 
-brew bundle --upgrade --file="$HOME/dotfiles/Brewfile"
-status=$?
+  # OSC 9: Ghostty desktop notification. Clicking it focuses this window.
+  printf '\e]9;%s\e\\' "Running brew bundle --upgrade"
 
-echo
-if (( status == 0 )); then
-  echo "brew bundle --upgrade: done."
-  printf '\e]9;%s\e\\' "brew bundle --upgrade: done"
-else
-  echo "brew bundle --upgrade: failed (exit $status)."
-  printf '\e]9;%s\e\\' "brew bundle --upgrade: failed (exit $status)"
+  brew bundle --upgrade --file="$HOME/dotfiles/Brewfile"
+  status=$?
+
+  echo
+  if (( status == 0 )); then
+    echo "brew bundle --upgrade: done."
+    printf '\e]9;%s\e\\' "brew bundle --upgrade: done"
+  else
+    echo "brew bundle --upgrade: failed (exit $status)."
+    printf '\e]9;%s\e\\' "brew bundle --upgrade: failed (exit $status)"
+  fi
+
+  # Review window with a timeout instead of Ghostty's indefinite
+  # wait-after-command, so an undismissed window doesn't linger and get
+  # merged as a stale tab into tomorrow's run.
+  echo
+  echo "(press any key to close, auto-closes in 1h)"
+  read -t 3600 -k 1 -s
+  exit $status
+fi
+
+if ! /usr/bin/lockf -k -t 0 "$LOCKFILE" "$0" --locked; then
+  echo "brew-upgrade-run: another instance is already running, skipping."
+  printf '\e]9;%s\e\\' "brew upgrade already running elsewhere"
+  read -t 3600 -k 1 -s
 fi

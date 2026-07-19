@@ -10,7 +10,6 @@
         <string>-na</string>
         <string>Ghostty</string>
         <string>--args</string>
-        <string>--wait-after-command=true</string>
         <string>-e</string>
         <string>/Users/khoinguyen/.local/bin/brew-upgrade-run</string>
     </array>
