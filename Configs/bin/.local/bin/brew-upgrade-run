@@ -17,15 +17,15 @@ if [[ "$1" == --locked ]]; then
   printf '\e]9;%s\e\\' "Running brew bundle --upgrade"
 
   brew bundle --upgrade --file="$HOME/dotfiles/Brewfile"
-  status=$?
+  exit_status=$?
 
   echo
-  if (( status == 0 )); then
+  if (( exit_status == 0 )); then
     echo "brew bundle --upgrade: done."
     printf '\e]9;%s\e\\' "brew bundle --upgrade: done"
   else
-    echo "brew bundle --upgrade: failed (exit $status)."
-    printf '\e]9;%s\e\\' "brew bundle --upgrade: failed (exit $status)"
+    echo "brew bundle --upgrade: failed (exit $exit_status)."
+    printf '\e]9;%s\e\\' "brew bundle --upgrade: failed (exit $exit_status)"
   fi
 
   # Review window with a timeout instead of Ghostty's indefinite
@@ -34,11 +34,21 @@ if [[ "$1" == --locked ]]; then
   echo
   echo "(press any key to close, auto-closes in 1h)"
   read -t 3600 -k 1 -s
-  exit $status
+  exit $exit_status
 fi
 
-if ! /usr/bin/lockf -k -t 0 "$LOCKFILE" "$0" --locked; then
+/usr/bin/lockf -k -t 0 "$LOCKFILE" "$0" --locked
+lockf_status=$?
+
+# lockf(1) EXIT STATUS: once it acquires the lock it returns the wrapped
+# command's own exit status, which can collide with EX_TEMPFAIL (75) below.
+# Only treat 75 as "lock busy" — anything else means our own run failed and
+# already printed its own done/failed message above.
+if (( lockf_status == 75 )); then
   echo "brew-upgrade-run: another instance is already running, skipping."
   printf '\e]9;%s\e\\' "brew upgrade already running elsewhere"
-  read -t 3600 -k 1 -s
+  # Nothing to review here, so close fast instead of lingering like the
+  # real run's 1h review window — this is just a decoy from the
+  # sleep/wake double-fire (see header comment).
+  read -t 5 -k 1 -s
 fi
