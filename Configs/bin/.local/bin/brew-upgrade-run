@@ -12,6 +12,9 @@ LOCKFILE="/tmp/.brew-upgrade-run.lock"
 if [[ "$1" == --locked ]]; then
   shift
   export PATH="/opt/homebrew/bin:/usr/bin:/bin"
+  # brew trust reads $XDG_CONFIG_HOME/homebrew/trust.json; without this launchd's
+  # minimal env falls back to ~/.homebrew/trust.json, a separate untrusted file.
+  export XDG_CONFIG_HOME="$HOME/.config"
 
   # OSC 9: Ghostty desktop notification. Clicking it focuses this window.
   printf '\e]9;%s\e\\' "Running brew bundle --upgrade"
