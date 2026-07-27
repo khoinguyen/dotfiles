@@ -45,6 +45,7 @@ tuckr add \* --force
 | starship | `Configs/starship/.config/starship.toml` |
 | mise | `Configs/mise/.config/mise/config.toml` |
 | packages | `Brewfile` |
+| non-brew fonts | `fonts.txt` |
 
 ## Architecture notes
 

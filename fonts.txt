@@ -1,0 +1,5 @@
+# Non-brew fonts, fetched from Google Fonts.
+# Format: Name|manifest-url (fonts.google.com/download/list?family=<Name>)
+Carlito|https://fonts.google.com/download/list?family=Carlito
+Inter|https://fonts.google.com/download/list?family=Inter
+Lato|https://fonts.google.com/download/list?family=Lato

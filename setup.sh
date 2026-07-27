@@ -42,6 +42,36 @@ else
 fi
 
 # ─────────────────────────────────────────────
+section "Fonts (non-brew)"
+# ─────────────────────────────────────────────
+
+FONTS_LIST="$DOTFILES_DIR/fonts.txt"
+
+if [[ -f "$FONTS_LIST" ]]; then
+  while IFS='|' read -r font_name font_url; do
+    [[ -z "$font_name" || "$font_name" == \#* ]] && continue
+
+    if compgen -G "$HOME/Library/Fonts/*${font_name}*" &>/dev/null; then
+      success "${font_name} already installed"
+      continue
+    fi
+
+    log "Installing ${font_name}..."
+    manifest="$(curl -fsSL "$font_url" 2>/dev/null | tail -n +2)" || manifest=""
+    if [[ -n "$manifest" ]] && printf '%s' "$manifest" | jq -e '.manifest.fileRefs' &>/dev/null; then
+      while IFS=$'\t' read -r file_name file_url; do
+        curl -fsSL "$file_url" -o "$HOME/Library/Fonts/$file_name" || warn "  could not download ${file_name}"
+      done < <(printf '%s' "$manifest" | jq -r '.manifest.fileRefs[] | select(.filename | test("\\.(ttf|otf)$")) | "\(.filename | split("/") | last)\t\(.url)"')
+      success "${font_name} installed"
+    else
+      warn "Could not install ${font_name} (skipping)"
+    fi
+  done <"$FONTS_LIST"
+else
+  log "No fonts.txt found, skipping"
+fi
+
+# ─────────────────────────────────────────────
 section "macOS defaults"
 # ─────────────────────────────────────────────
 
