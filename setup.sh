@@ -51,7 +51,7 @@ if [[ -f "$FONTS_LIST" ]]; then
   while IFS='|' read -r font_name font_url; do
     [[ -z "$font_name" || "$font_name" == \#* ]] && continue
 
-    if compgen -G "$HOME/Library/Fonts/*${font_name}*" &>/dev/null; then
+    if compgen -G "$HOME/Library/Fonts/*${font_name// /}*" &>/dev/null; then
       success "${font_name} already installed"
       continue
     fi

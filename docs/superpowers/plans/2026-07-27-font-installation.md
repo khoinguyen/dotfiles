@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add a "Fonts" section to `setup.sh` that downloads and installs non-brew Google Fonts (Carlito, Inter, Lato) into `~/Library/Fonts`, driven by an easy-to-edit `fonts.txt` list.
+**Goal:** Add a "Fonts" section to `setup.sh` that downloads and installs non-brew Google Fonts (Carlito, Inter, Lato, Libertinus Serif, Libertinus Math) into `~/Library/Fonts`, driven by an easy-to-edit `fonts.txt` list.
 
 **Architecture:** A new plain-text file `fonts.txt` at repo root holds `Name|manifest-url` pairs, where the URL is Google Fonts' JSON manifest endpoint (`fonts.google.com/download/list?family=<Name>`) — the "Download family" zip endpoint no longer serves a real zip (it now returns the web app's HTML shell), but the manifest endpoint returns a `)]}'`-prefixed JSON body with a `manifest.fileRefs` array of direct `{filename, url}` pairs to individual font files. `setup.sh` gains a "Fonts" section, placed after the Homebrew section, that reads `fonts.txt` line by line, skips a font if already installed (glob match on `~/Library/Fonts`), and otherwise fetches the manifest, validates it with `jq`, and downloads each `.ttf`/`.otf` file straight into `~/Library/Fonts` — no zip/unzip step.
 
@@ -16,6 +16,8 @@
 - `fonts.txt` format: one `Name|manifest-url` per line; blank lines and lines starting with `#` are comments, skipped.
 - Pass the manifest JSON to `jq` via `printf '%s'`, never `echo` — `echo` can reinterpret backslash-escaped sequences embedded in the manifest (e.g. `\r\n` inside bundled license text) and corrupt the JSON before `jq` sees it.
 - `compgen` (used for the idempotency glob check) is a bash builtin, not available under zsh — this is fine since `setup.sh` always runs via `bash` (shebang `#!/usr/bin/env bash`), but don't test the snippet by pasting it into an interactive zsh shell expecting the same result.
+- Multi-word family names in `fonts.txt` (e.g. `Libertinus Serif`) need `+` for spaces in the URL query param — Google Fonts rejects a literal space (`curl: (3) URL rejected`). The `Name` field itself keeps its real space; only the URL is encoded.
+- The idempotency glob must strip spaces from `name` before matching (`*${name// /}*`, not `*${name}*`) — Google's actual filenames drop spaces from multi-word families (`Libertinus Serif` → `LibertinusSerif-Regular.ttf`), so an unstripped glob never matches and the font re-downloads every run. Caught and fixed while adding Libertinus Serif/Math — Carlito/Inter/Lato never exposed it since they're single-word.
 
 ---
 

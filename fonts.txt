@@ -3,3 +3,5 @@
 Carlito|https://fonts.google.com/download/list?family=Carlito
 Inter|https://fonts.google.com/download/list?family=Inter
 Lato|https://fonts.google.com/download/list?family=Lato
+Libertinus Serif|https://fonts.google.com/download/list?family=Libertinus+Serif
+Libertinus Math|https://fonts.google.com/download/list?family=Libertinus+Math

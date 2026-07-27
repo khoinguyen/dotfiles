@@ -19,7 +19,13 @@ Plain text, one font per line: `Name|manifest-url`
 Carlito|https://fonts.google.com/download/list?family=Carlito
 Inter|https://fonts.google.com/download/list?family=Inter
 Lato|https://fonts.google.com/download/list?family=Lato
+Libertinus Serif|https://fonts.google.com/download/list?family=Libertinus+Serif
+Libertinus Math|https://fonts.google.com/download/list?family=Libertinus+Math
 ```
+
+Multi-word family names: use `+` for spaces in the URL query param (Google
+Fonts rejects a literal space; `curl: (3) URL rejected`). The `Name` field
+itself keeps its real space (`Libertinus Serif`) — only the URL is encoded.
 
 Lines starting with `#` and blank lines are skipped. Adding a font = adding
 one line, no bash editing.
@@ -42,8 +48,13 @@ installed earlier in the same run).
 Steps per line in `fonts.txt`:
 
 1. Parse `name` and `url` (split on `|`).
-2. Idempotency check: skip if `~/Library/Fonts/*${name}*` already matches a
-   file.
+2. Idempotency check: skip if `~/Library/Fonts/*${name// /}*` already
+   matches a file — spaces are stripped from `name` before globbing,
+   because Google Fonts' actual filenames drop spaces from multi-word
+   family names (e.g. family "Libertinus Serif" → file
+   `LibertinusSerif-Regular.ttf`, no space). A glob against the raw
+   `name` (with its space) would never match and the font would be
+   re-downloaded on every run.
 3. Otherwise: `curl` the manifest URL, strip the `)]}'` prefix line, and
    validate it's parseable JSON with a `manifest.fileRefs` array (via
    `jq -e`). Note: pass the manifest to `jq` with `printf '%s'`, not
