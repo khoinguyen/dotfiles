@@ -163,6 +163,139 @@ else
 fi
 
 # ─────────────────────────────────────────────
+section "Android SDK components"
+# ─────────────────────────────────────────────
+
+# Deliberately NOT installed: frida-tools / objection. They are only useful for
+# demonstrating that certificate pinning can be bypassed on a rooted device,
+# which is a known property of pinning rather than a test of any fix. Proxy
+# interception testing (mitmproxy) plus apktool/jadx cover the real verification.
+
+# The android-commandlinetools cask only ships sdkmanager/avdmanager; SDK
+# components are installed into ANDROID_HOME (shared with Android Studio).
+#
+# Prefer an OLDER cmdline-tools for the package installs. Versions 19+ write SDK
+# metadata at repository schema 4, while Android Gradle Plugin 8.7.x (pinned by React
+# Native 0.77) bundles an sdklib that reads only up to 3. That mismatch produces a
+# noisy warning on every Gradle invocation:
+#   This version only understands SDK XML versions up to 3 but an SDK XML file of
+#   version 4 was encountered
+# It is only a warning — builds still work — but pinning keeps the output readable.
+ANDROID_HOME="${ANDROID_HOME:-$HOME/Library/Android/sdk}"
+CMDLINE_TOOLS_PINNED="16.0"
+SDKMANAGER="/opt/homebrew/share/android-commandlinetools/cmdline-tools/latest/bin/sdkmanager"
+SDKMANAGER_PINNED="$ANDROID_HOME/cmdline-tools/$CMDLINE_TOOLS_PINNED/bin/sdkmanager"
+
+# Emulator system images must be google_apis (NOT google_apis_playstore) —
+# only that variant allows `adb root`, needed to install a proxy CA into the
+# system trust store for MITM testing.
+#
+# Two AVDs on purpose:
+#   api35 — matches the app's targetSdk; functional/regression testing.
+#   api33 — Android 13 is the last release with the system CA store at
+#           /system/etc/security/cacerts. Android 14+ moved it into the
+#           Conscrypt APEX, which breaks the standard CA-injection technique.
+#           Use this one for proxy interception / cert pinning tests.
+IMAGE_API35="system-images;android-35;google_apis;arm64-v8a"
+IMAGE_API33="system-images;android-33;google_apis;arm64-v8a"
+AVDS=(
+  "pixel6_api35:${IMAGE_API35}:pixel_6"
+  "pixel6_api33_mitm:${IMAGE_API33}:pixel_6"
+)
+SDK_PACKAGES=(
+  "platform-tools"
+  "emulator"
+  "platforms;android-35"
+  "build-tools;35.0.0"
+  "$IMAGE_API35"
+  "$IMAGE_API33"
+)
+
+if [[ -x "$SDKMANAGER" ]]; then
+  if [[ -z "${JAVA_HOME:-}" ]] && [[ -d /Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home ]]; then
+    export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
+  fi
+
+  if ! command -v java &>/dev/null && [[ -z "${JAVA_HOME:-}" ]]; then
+    warn "No JDK found — install temurin@17 first, skipping Android SDK"
+  else
+    mkdir -p "$ANDROID_HOME"
+
+    # Errors are captured to a log and printed on failure rather than discarded.
+    # A bootstrap step that reports "could not install X" without saying why just
+    # moves the debugging cost onto whoever runs it next.
+    sdk_log="$(mktemp)"
+    run_sdk() { # run_sdk <description> <command...>
+      local desc="$1"
+      shift
+      if "$@" >"$sdk_log" 2>&1; then
+        success "$desc"
+      else
+        warn "$desc failed:"
+        sed 's/^/      /' "$sdk_log" | tail -12
+        return 1
+      fi
+    }
+
+    log "Accepting SDK licenses..."
+    yes | "$SDKMANAGER" --sdk_root="$ANDROID_HOME" --licenses >/dev/null 2>&1 || true
+
+    # Install the pinned cmdline-tools first, then use it for everything else so
+    # package metadata stays readable by AGP 8.7.x (see note above).
+    if [[ ! -x "$SDKMANAGER_PINNED" ]]; then
+      log "Installing cmdline-tools;$CMDLINE_TOOLS_PINNED (AGP-compatible)..."
+      run_sdk "cmdline-tools;$CMDLINE_TOOLS_PINNED installed" \
+        "$SDKMANAGER" --sdk_root="$ANDROID_HOME" "cmdline-tools;$CMDLINE_TOOLS_PINNED" || true
+    else
+      success "cmdline-tools;$CMDLINE_TOOLS_PINNED already installed"
+    fi
+
+    installer="$SDKMANAGER"
+    [[ -x "$SDKMANAGER_PINNED" ]] && installer="$SDKMANAGER_PINNED"
+
+    log "Installing SDK packages..."
+    run_sdk "SDK packages installed" \
+      "$installer" --sdk_root="$ANDROID_HOME" "${SDK_PACKAGES[@]}" || true
+
+    # avdmanager lives beside whichever sdkmanager we used. Note it accepts NO
+    # --sdk-root flag (unlike sdkmanager) — it locates the SDK via ANDROID_HOME,
+    # so that must be exported rather than passed.
+    #
+    # ANDROID_AVD_HOME must also be pinned: newer avdmanager honours XDG_CONFIG_HOME
+    # and would write to ~/.config/.android/avd, but the emulator only searches
+    # $ANDROID_AVD_HOME, $ANDROID_SDK_HOME/avd and ~/.android/avd. Without this the
+    # AVD is created successfully and then fails to launch with "Unknown AVD name".
+    AVDMANAGER="$(dirname "$installer")/avdmanager"
+    export ANDROID_HOME
+    export ANDROID_SDK_ROOT="$ANDROID_HOME"
+    export ANDROID_AVD_HOME="$HOME/.android/avd"
+    mkdir -p "$ANDROID_AVD_HOME"
+
+    for spec in "${AVDS[@]}"; do
+      IFS=':' read -r avd_name avd_image avd_device <<<"$spec"
+      if "$AVDMANAGER" list avd 2>/dev/null | grep -q "Name: ${avd_name}"; then
+        success "AVD ${avd_name} already exists"
+      else
+        log "Creating AVD ${avd_name}..."
+        # `echo no` declines the "custom hardware profile?" prompt.
+        if echo no | "$AVDMANAGER" --silent create avd \
+          --name "$avd_name" --package "$avd_image" --device "$avd_device" \
+          >"$sdk_log" 2>&1; then
+          success "AVD ${avd_name} created (rootable — adb root works)"
+        else
+          warn "Could not create AVD ${avd_name}:"
+          sed 's/^/      /' "$sdk_log" | tail -12
+        fi
+      fi
+    done
+
+    rm -f "$sdk_log"
+  fi
+else
+  warn "sdkmanager not found — install the android-commandlinetools cask first"
+fi
+
+# ─────────────────────────────────────────────
 section "LaunchAgents"
 # ─────────────────────────────────────────────
 

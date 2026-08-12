@@ -69,6 +69,22 @@ cask "lens"                # Kubernetes GUI
 cask "tableau"             # data visualization
 cask "zui"                 # network packet analysis (successor to Brim)
 
+# ── Mobile Development ─────────────────────────────────────────────────────────
+cask "temurin@17"          # JDK 17 — required by Android Gradle Plugin 8.x
+cask "android-commandlinetools"  # sdkmanager / avdmanager (SDK, emulator images)
+cask "android-platform-tools"    # adb, fastboot
+brew "watchman"            # React Native Metro file watcher
+brew "cocoapods"           # iOS dependency manager
+
+# ── Mobile Security Testing ────────────────────────────────────────────────────
+# Deliberately no frida-tools/objection: they only demonstrate that pinning can be
+# bypassed on a rooted device, which is inherent to pinning rather than a test of
+# any fix. Proxy interception plus APK inspection cover the real verification.
+brew "apktool"             # APK decode/rebuild — inspect manifest + res/xml
+brew "jadx"                # DEX to Java decompiler — confirm pins landed in release
+cask "mitmproxy"           # intercepting proxy (cask, not a formula)
+cask "burp-suite"          # intercepting proxy — matches pentest reports
+
 # ── Fonts ──────────────────────────────────────────────────────────────────────
 cask "font-fira-code-nerd-font"
 cask "font-hack-nerd-font"
@@ -145,3 +161,8 @@ cask "steam"
 mas "1Password for Safari", id: 1569813296
 mas "Pine Player", id: 1112075769
 mas "The Unarchiver", id: 425424353
+cask "cmux"
+brew "openlore"
+brew "fallow"
+tap "modem-dev/tap"
+brew "modem-dev/tap/hunk"
