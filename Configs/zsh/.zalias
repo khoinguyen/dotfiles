@@ -112,6 +112,17 @@ function git_approve_pr() {
     repo="${arg%%#*}"
     num="${arg##*#}"
     label="#$num on $repo"
+  elif [[ "$arg" == *#* ]]; then
+    local short_repo="${arg%%#*}"
+    num="${arg##*#}"
+    local org
+    org=$(gh repo view --json owner -q .owner.login 2>/dev/null)
+    if [[ -z "$org" ]]; then
+      echo "git_approve_pr: could not determine org from current repo" >&2
+      return 1
+    fi
+    repo="$org/$short_repo"
+    label="#$num on $repo"
   else
     num="$arg"
     label="#$num"
