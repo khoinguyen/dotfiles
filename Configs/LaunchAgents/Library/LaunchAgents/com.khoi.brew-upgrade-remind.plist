@@ -6,12 +6,7 @@
     <string>com.khoi.brew-upgrade-remind</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/usr/bin/open</string>
-        <string>-na</string>
-        <string>Ghostty</string>
-        <string>--args</string>
-        <string>-e</string>
-        <string>/Users/khoinguyen/.local/bin/brew-upgrade-run</string>
+        <string>/Users/khoinguyen/.local/bin/brew-upgrade-launch</string>
     </array>
     <key>StartCalendarInterval</key>
     <dict>

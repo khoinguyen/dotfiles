@@ -1,0 +1,33 @@
+#!/bin/zsh
+# LaunchAgent entry point for the daily brew upgrade (com.khoi.brew-upgrade-remind).
+#
+# Previously the plist opened a terminal directly:
+#   open -na Ghostty --args -e ~/.local/bin/brew-upgrade-run
+# That pattern — a launchd persistence item launching a GUI terminal with an
+# inline script argument — tripped SentinelOne's
+# persistence_deception/backgroundtaskmanagementd heuristic almost daily.
+# Instead we ask the already-running cmux app to open a workspace that runs the
+# upgrade script, so nothing is launched via `open ... --args`.
+#
+# This requires cmux's socket control mode to allow external clients, otherwise
+# a launchd-spawned process is denied ("only processes started inside cmux").
+# Set automation.socketControlMode to "automation" in ~/.config/cmux/cmux.json.
+CMUX_BIN="/Applications/cmux.app/Contents/Resources/bin/cmux"
+RUN_SCRIPT="$HOME/.local/bin/brew-upgrade-run"
+
+# launchd hands us a minimal environment; give brew and cmux's helpers a PATH.
+export PATH="/opt/homebrew/bin:/usr/bin:/bin:$PATH"
+
+# The socket only exists while cmux is running. Requiring cmux to already be up
+# (rather than `open`-ing it) is intentional: it keeps this job from launching
+# any GUI app itself, which is what drew the SentinelOne alert.
+if ! "$CMUX_BIN" ping >/dev/null 2>&1; then
+  echo "brew-upgrade-launch: cmux is not running; skipping upgrade."
+  exit 0
+fi
+
+exec "$CMUX_BIN" new-workspace \
+  --name "brew upgrade" \
+  --description "Daily: brew bundle --upgrade" \
+  --command "$RUN_SCRIPT" \
+  --focus false

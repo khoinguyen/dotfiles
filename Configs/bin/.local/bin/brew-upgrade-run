@@ -1,13 +1,33 @@
 #!/bin/zsh
-# Runs in a Ghostty window opened daily by launchd (com.khoi.brew-upgrade-remind),
-# so Touch ID prompts (sudo, ssh-agent unlock) surface normally.
+# Runs in a cmux workspace created daily by launchd
+# (com.khoi.brew-upgrade-remind -> brew-upgrade-launch), so Touch ID prompts
+# (sudo, ssh-agent unlock) surface normally.
 #
 # launchd's StartCalendarInterval can double-fire around sleep/wake, which
-# would otherwise open two Ghostty tabs both running the upgrade at once.
+# would otherwise create two cmux workspaces both running the upgrade at once.
 # Guard with a non-blocking lock: the second invocation bails immediately
 # instead of racing brew. lockf holds the lock for as long as this process
 # (re-exec'd via --locked) is alive, so it covers the whole upgrade run.
 LOCKFILE="/tmp/.brew-upgrade-run.lock"
+CMUX_BIN="/Applications/cmux.app/Contents/Resources/bin/cmux"
+
+# Post a desktop notification. Prefer cmux's native notification (this script
+# runs inside a cmux workspace); fall back to OSC 9 for other Ghostty-family
+# terminals.
+notify() {
+  if [[ -n "${CMUX_WORKSPACE_ID:-}" ]] &&
+    "$CMUX_BIN" notify --title "brew upgrade" --body "$1" >/dev/null 2>&1; then
+    return 0
+  fi
+  printf '\e]9;%s\e\\' "$1"
+}
+
+# Close this script's own cmux workspace, so an untouched run doesn't leave a
+# stale "brew upgrade" workspace behind (best effort; no-op outside cmux).
+close_workspace() {
+  [[ -n "${CMUX_WORKSPACE_ID:-}" ]] || return 0
+  "$CMUX_BIN" close-workspace --workspace "$CMUX_WORKSPACE_ID" >/dev/null 2>&1
+}
 
 if [[ "$1" == --locked ]]; then
   shift
@@ -16,8 +36,7 @@ if [[ "$1" == --locked ]]; then
   # minimal env falls back to ~/.homebrew/trust.json, a separate untrusted file.
   export XDG_CONFIG_HOME="$HOME/.config"
 
-  # OSC 9: Ghostty desktop notification. Clicking it focuses this window.
-  printf '\e]9;%s\e\\' "Running brew bundle --upgrade"
+  notify "Running brew bundle --upgrade"
 
   brew bundle --upgrade --file="$HOME/dotfiles/Brewfile"
   exit_status=$?
@@ -25,18 +44,19 @@ if [[ "$1" == --locked ]]; then
   echo
   if (( exit_status == 0 )); then
     echo "brew bundle --upgrade: done."
-    printf '\e]9;%s\e\\' "brew bundle --upgrade: done"
+    notify "brew bundle --upgrade: done"
   else
     echo "brew bundle --upgrade: failed (exit $exit_status)."
-    printf '\e]9;%s\e\\' "brew bundle --upgrade: failed (exit $exit_status)"
+    notify "brew bundle --upgrade: failed (exit $exit_status)"
   fi
 
-  # Review window with a timeout instead of Ghostty's indefinite
-  # wait-after-command, so an undismissed window doesn't linger and get
-  # merged as a stale tab into tomorrow's run.
+  # Review window with a timeout, so an undismissed run doesn't linger and pile
+  # up a stale workspace. Then close the workspace; without this, cmux keeps the
+  # terminal open at a shell prompt after the script exits.
   echo
   echo "(press any key to close, auto-closes in 1h)"
   read -t 3600 -k 1 -s
+  close_workspace
   exit $exit_status
 fi
 
@@ -49,9 +69,10 @@ lockf_status=$?
 # already printed its own done/failed message above.
 if (( lockf_status == 75 )); then
   echo "brew-upgrade-run: another instance is already running, skipping."
-  printf '\e]9;%s\e\\' "brew upgrade already running elsewhere"
-  # Nothing to review here, so close fast instead of lingering like the
-  # real run's 1h review window — this is just a decoy from the
-  # sleep/wake double-fire (see header comment).
+  notify "brew upgrade already running elsewhere"
+  # Nothing to review here, so close quickly instead of lingering like the real
+  # run's 1h review window — this is just a decoy from the sleep/wake
+  # double-fire (see header comment).
   read -t 5 -k 1 -s
+  close_workspace
 fi
