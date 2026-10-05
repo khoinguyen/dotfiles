@@ -1,10 +1,9 @@
 # ── Taps ──────────────────────────────────────────────────────────────────────
-tap "atlassian/acli"
-tap "atomicjar/tap"
-tap "confluentinc/tap"
-tap "fluxcd/tap"
-tap "grafana/grafana"
-tap "socktainer/tap"
+tap "atlassian/acli", trusted: true
+tap "atomicjar/tap", trusted: true
+tap "confluentinc/tap", trusted: true
+tap "fluxcd/tap", trusted: true
+tap "grafana/grafana", trusted: true
 
 # ── Shell & Terminal ───────────────────────────────────────────────────────────
 brew "antidote"            # zsh plugin manager
@@ -58,13 +57,12 @@ brew "kind"                # local k8s clusters
 brew "kubernetes-cli"      # kubectl
 brew "k9s"                 # k8s TUI
 brew "snowflake-cli"
-brew "socktainer/tap/socktainer"  # Docker-compatible API on Apple container
 brew "stern"               # k8s log tailing
 brew "trivy"               # vulnerability scanner
 brew "wireguard-tools"
-brew "atlassian/acli/acli"
-brew "confluentinc/tap/cli"
-brew "grafana/grafana/gcx"
+brew "atlassian/acli/acli", trusted: true
+brew "confluentinc/tap/cli", trusted: true
+brew "grafana/grafana/gcx", trusted: true
 cask "lens"                # Kubernetes GUI
 cask "tableau"             # data visualization
 cask "zui"                 # network packet analysis (successor to Brim)
@@ -129,7 +127,7 @@ cask "wpsoffice"
 # ── Utilities ──────────────────────────────────────────────────────────────────
 cask "android-file-transfer"
 cask "antigravity"
-cask "atomicjar/tap/testcontainers-desktop"
+cask "atomicjar/tap/testcontainers-desktop", trusted: true
 cask "bettershot"
 cask "daisydisk"
 cask "hammerspoon"
@@ -162,7 +160,12 @@ mas "1Password for Safari", id: 1569813296
 mas "Pine Player", id: 1112075769
 mas "The Unarchiver", id: 425424353
 cask "cmux"
-brew "openlore"
 brew "fallow"
-tap "modem-dev/tap"
-brew "modem-dev/tap/hunk"
+tap "modem-dev/tap", trusted: true
+brew "modem-dev/tap/hunk", trusted: true
+brew "gh"
+brew "shellcheck"
+brew "cloudflared"
+brew "kubectx"
+tap "anomalyco/tap"
+brew "anomalyco/tap/opencode"

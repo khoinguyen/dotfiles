@@ -2,6 +2,7 @@ alias ssh="TERM=xterm-256color ssh"
 alias lg=lazygit
 alias kc=kubectl
 alias vim=nvim
+alias vf='fd --type f --color=always --hidden --exclude .git | fzf --ansi | xargs -o vim'
 export EDITOR=nvim
 function now() {
   delta=$1
