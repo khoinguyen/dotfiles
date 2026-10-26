@@ -116,11 +116,12 @@ function git_approve_pr() {
   elif [[ "$arg" == *#* ]]; then
     local short_repo="${arg%%#*}"
     num="${arg##*#}"
+    # Current repo's owner if it has <short_repo> (e.g. run from ~/dotfiles, owner khoinguyen has no
+    # devops), else $GIT_APPROVE_PR_ORG, defaulting to AmpUpTech.
     local org
     org=$(gh repo view --json owner -q .owner.login 2>/dev/null)
-    if [[ -z "$org" ]]; then
-      echo "git_approve_pr: could not determine org from current repo" >&2
-      return 1
+    if [[ -z "$org" ]] || ! gh repo view "$org/$short_repo" --json name >/dev/null 2>&1; then
+      org="${GIT_APPROVE_PR_ORG:-AmpUpTech}"
     fi
     repo="$org/$short_repo"
     label="#$num on $repo"
