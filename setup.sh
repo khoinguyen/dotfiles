@@ -102,6 +102,20 @@ else
   success "Touch ID for sudo enabled"
 fi
 
+# pam_tid.so is useless without enrolled fingerprints (OS upgrades can wipe them)
+fingerprints=$(bioutil -c 2>/dev/null | awk -F'\t' '/^User/ {print $2+0}' || true)
+if [[ "${fingerprints:-0}" -gt 0 ]]; then
+  success "Touch ID has $fingerprints fingerprint(s) enrolled"
+else
+  warn "No Touch ID fingerprints enrolled — add one in System Settings → Touch ID & Password"
+fi
+
+if bioutil -r 2>/dev/null | grep -q "Biometrics for unlock: 1"; then
+  success "Touch ID unlock enabled"
+else
+  warn "Touch ID unlock disabled — enable it in System Settings → Touch ID & Password"
+fi
+
 # ─────────────────────────────────────────────
 section "SSH authorized_keys"
 # ─────────────────────────────────────────────
