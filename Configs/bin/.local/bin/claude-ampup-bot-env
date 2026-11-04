@@ -1,0 +1,33 @@
+#!/bin/bash
+# SessionStart hook (startup, resume, clear, compact): Claude sessions in the
+# AmpUp workspace push and open PRs as ampup-bot, so I can approve them with
+# my own account (git_approve_pr). Commits stay authored by me.
+#
+# Runs on every session start, so sessions brought back by a cmux restore get
+# the same credentials as ones I launched by hand.
+#
+# - GH_TOKEN: gh and its git credential helper act as ampup-bot.
+# - insteadOf: AmpUpTech SSH remotes go over HTTPS, so pushes use that
+#   credential helper instead of my SSH key.
+
+[ -n "$CLAUDE_ENV_FILE" ] || exit 0
+
+cwd=$(jq -r '.cwd // empty')
+case "$cwd/" in
+  "$HOME/Workspaces/ampup/"*) ;;
+  *) exit 0 ;;
+esac
+
+# A restored session may not inherit my login env; read it from a login shell.
+token=${BOT_GH_PAT:-$(zsh -lc 'print -r -- $BOT_GH_PAT' 2>/dev/null)}
+if [ -z "$token" ]; then
+  echo '{"systemMessage":"claude-ampup-bot-env: BOT_GH_PAT not found; git/gh will act as your account"}'
+  exit 0
+fi
+
+{
+  printf 'export GH_TOKEN=%q\n' "$token"
+  echo "export GIT_CONFIG_COUNT=1"
+  echo "export GIT_CONFIG_KEY_0='url.https://github.com/AmpUpTech/.insteadOf'"
+  echo "export GIT_CONFIG_VALUE_0='git@github.com:AmpUpTech/'"
+} >> "$CLAUDE_ENV_FILE"

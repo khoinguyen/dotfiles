@@ -133,7 +133,25 @@ function git_approve_pr() {
   local -a repo_flag
   [[ -n "$repo" ]] && repo_flag=(-R "$repo")
 
-  if GH_TOKEN="$BOT_GH_PAT" gh pr review "${repo_flag[@]}" ${num:+"$num"} --approve --body "#self-approved"; then
+  # Approve as me (keyring token, ignoring any GH_TOKEN a claude session set).
+  # GitHub won't let me approve a PR I opened, so those fall back to ampup-bot.
+  local me author
+  me=$(env -u GH_TOKEN -u GITHUB_TOKEN gh api user -q .login)
+  author=$(env -u GH_TOKEN -u GITHUB_TOKEN gh pr view "${repo_flag[@]}" ${num:+"$num"} --json author -q .author.login) || {
+    echo "git_approve_pr: cannot find PR ($label)" >&2
+    return 1
+  }
+  local -a review_env review_body
+  if [[ "$author" == "$me" ]]; then
+    review_env=(GH_TOKEN="$BOT_GH_PAT")
+    review_body=(--body "#self-approved")
+    label="$label, as ampup-bot"
+  else
+    review_env=(-u GH_TOKEN -u GITHUB_TOKEN)
+    label="$label, as $me"
+  fi
+
+  if env "${review_env[@]}" gh pr review "${repo_flag[@]}" ${num:+"$num"} --approve "${review_body[@]}"; then
     echo "git_approve_pr: approved PR ($label)"
   else
     echo "git_approve_pr: failed to approve PR ($label)" >&2
