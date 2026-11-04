@@ -1,6 +1,5 @@
 # ── Taps ──────────────────────────────────────────────────────────────────────
 tap "atlassian/acli", trusted: true
-tap "atomicjar/tap", trusted: true
 tap "confluentinc/tap", trusted: true
 tap "fluxcd/tap", trusted: true
 tap "grafana/grafana", trusted: true
@@ -9,11 +8,8 @@ tap "grafana/grafana", trusted: true
 brew "antidote"            # zsh plugin manager
 brew "atuin"               # shell history
 brew "starship"            # prompt
-brew "tmux"                # terminal multiplexer
 brew "tuckr"               # dotfiles symlink manager
 brew "zoxide"              # smart cd
-cask "ghostty"
-cask "warp"
 
 # ── Editors & IDEs ─────────────────────────────────────────────────────────────
 brew "neovim"
@@ -98,7 +94,6 @@ cask "vivaldi"
 
 # ── Communication ──────────────────────────────────────────────────────────────
 cask "discord"
-cask "loom"
 cask "slack"
 cask "telegram"
 cask "zalo"
@@ -127,7 +122,6 @@ cask "wpsoffice"
 # ── Utilities ──────────────────────────────────────────────────────────────────
 cask "android-file-transfer"
 cask "antigravity"
-cask "atomicjar/tap/testcontainers-desktop", trusted: true
 cask "bettershot"
 cask "daisydisk"
 cask "hammerspoon"
@@ -139,7 +133,6 @@ cask "postman"
 cask "raspberry-pi-imager"
 cask "rippling"
 cask "tailscale-app"
-cask "thaw"
 cask "wireshark-app"
 
 # ── Documents ──────────────────────────────────────────────────────────────────
