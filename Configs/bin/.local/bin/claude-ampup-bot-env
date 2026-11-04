@@ -18,10 +18,10 @@ case "$cwd/" in
   *) exit 0 ;;
 esac
 
-# A restored session may not inherit my login env; read it from a login shell.
-token=${BOT_GH_PAT:-$(zsh -lc 'print -r -- $BOT_GH_PAT' 2>/dev/null)}
+# Token lives only in 1Password; reading it asks for Touch ID.
+token=$(op read --account ampup.1password.com 'op://Employee/ampup-bot_PAT/password' 2>/dev/null)
 if [ -z "$token" ]; then
-  echo '{"systemMessage":"claude-ampup-bot-env: BOT_GH_PAT not found; git/gh will act as your account"}'
+  echo '{"systemMessage":"claude-ampup-bot-env: could not read ampup-bot token from 1Password; git/gh will act as your account"}'
   exit 0
 fi
 
