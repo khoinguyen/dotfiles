@@ -144,7 +144,7 @@ function git_approve_pr() {
   local -a review_env review_body
   if [[ "$author" == "$me" ]]; then
     local bot_token
-    bot_token=$(op read --account ampup.1password.com 'op://Employee/ampup-bot_PAT/password') || {
+    bot_token=$(op read --account ampup.1password.com 'op://Employee/gh_claude_pat/token') || {
       echo "git_approve_pr: cannot read ampup-bot token from 1Password" >&2
       return 1
     }
