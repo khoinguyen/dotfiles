@@ -44,6 +44,7 @@ tuckr add \* --force
 | tmux sessions | `Configs/tmux/.config/tmux-layouts/*.session.sh` |
 | starship | `Configs/starship/.config/starship.toml` |
 | mise | `Configs/mise/.config/mise/config.toml` |
+| herdr-app | `Configs/herdr-app/.config/herdr-app/` (`settings.json`, `themes/gruvbox-*.json` only; the app rewrites its other files on start). Where to customise: `docs/herdr.md` |
 | packages | `Brewfile` |
 | non-brew fonts | `fonts.txt` |
 
