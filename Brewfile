@@ -160,5 +160,11 @@ brew "gh"
 brew "shellcheck"
 brew "cloudflared"
 brew "kubectx"
-tap "anomalyco/tap"
+tap "anomalyco/tap", trusted: true
 brew "anomalyco/tap/opencode-v2"
+tap "nvidia/openshell", trusted: true
+brew "nvidia/openshell/openshell"
+brew "btop"
+brew "libpq"
+
+cask "herdr-app"
