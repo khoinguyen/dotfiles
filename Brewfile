@@ -110,7 +110,6 @@ cask "protonvpn"
 cask "chatgpt"
 cask "claude"
 cask "claude-code"
-brew "herdr"                # terminal agent multiplexer
 
 # ── Productivity ───────────────────────────────────────────────────────────────
 cask "obsidian"
